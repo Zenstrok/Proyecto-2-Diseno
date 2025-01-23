@@ -1,0 +1,150 @@
+/* General */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%; /* Asegura que ocupen toda la altura del viewport */
+  width: 100%;
+  font-family: "Roboto", sans-serif;
+  background-color: #f9f9f9;
+  color: #1a1a1a; /* Texto negro para modo claro */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark-mode {
+  background-color: #1f1f1f;
+  color: #e0e0e0; /* Texto claro para modo oscuro */
+}
+
+/* Ajusta el contenedor principal */
+.inicio {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ocupa toda la altura del viewport */
+  width: 100%; /* Extiende el ancho */
+  box-sizing: border-box;
+}
+
+/* El contenido principal crece para llenar el espacio */
+.main-content {
+  flex: 1; /* Hace que el contenido principal ocupe todo el espacio disponible */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+  width: 100%; /* Extiende el ancho */
+  box-sizing: border-box;
+  background-color: inherit; /* Hereda el color de fondo global */
+}
+
+/* Header */
+.header {
+  background-color: #ffffff;
+  color: #1a1a1a;
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .header {
+  background-color: #333333;
+  color: #ffffff;
+}
+
+/* Footer */
+.footer {
+  background: #ffffff;
+  color: #1a1a1a;
+  text-align: center;
+  padding: 1rem;
+  width: 100%; /* Extiende el ancho del footer */
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Sombra para distinguir */
+}
+
+.dark-mode .footer {
+  background: #333333;
+  color: #ffffff;
+}
+
+/* Dashboard Cards */
+.dashboard-card {
+  background: #ffffff; /* Fondo blanco */
+  color: #1a1a1a; /* Texto negro */
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .dashboard-card {
+  background: #333333; /* Fondo oscuro */
+  color: #ffffff; /* Texto claro */
+}
+
+/* Pedidos activos */
+.pedidos-activos h2 {
+  color: #1a1a1a; /* Texto negro para el título */
+}
+
+.dark-mode .pedidos-activos h2 {
+  color: #ffffff; /* Texto claro */
+}
+
+.pedidos-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.pedidos-table th {
+  background: #4caf50; /* Fondo verde */
+  color: #ffffff; /* Texto blanco */
+}
+
+.pedidos-table td {
+  background: #ffffff; /* Fondo blanco para celdas */
+  color: #1a1a1a; /* Texto negro */
+}
+
+.dark-mode .pedidos-table td {
+  background: #333333; /* Fondo oscuro */
+  color: #e0e0e0; /* Texto claro */
+}
+
+/* Botones */
+.btn-accion {
+  background: #4caf50; /* Fondo verde */
+  color: #ffffff; /* Texto blanco */
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-accion:hover {
+  background: #45a049; /* Verde más oscuro */
+}
+
+.dark-mode .btn-accion {
+  background: #4caf50; /* Misma apariencia en modo oscuro */
+  color: #ffffff; /* Texto claro */
+}
+
+/* Notificaciones */
+.notificaciones h2, .notificaciones p {
+  color: #1a1a1a; /* Texto negro en modo claro */
+}
+
+.dark-mode .notificaciones h2, .dark-mode .notificaciones p {
+  color: #ffffff; /* Texto claro en modo oscuro */
+}
+
+/* Historial de pedidos */
+.historial-pedidos h2 {
+  color: #1a1a1a; /* Títulos en negro */
+}
+
+.dark-mode .historial-pedidos h2 {
+  color: #ffffff; /* Títulos claros */
+}
