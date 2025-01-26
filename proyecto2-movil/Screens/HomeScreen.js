@@ -1,86 +1,110 @@
-import React from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+import React, { useContext } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { NavigationContainer } from "@react-navigation/native";
+import { AppContext } from "../context/AppContext";
 
-const HomeScreen = () => {
-  // Ejemplo de datos ficticios para mostrar categorías de restaurantes
-  const categories = [
-    {
-      id: "1",
-      name: "Comida Rápida",
-      image: "https://via.placeholder.com/150",
-    },
-    { id: "2", name: "Italiana", image: "https://via.placeholder.com/150" },
-    { id: "3", name: "Sushi", image: "https://via.placeholder.com/150" },
-    { id: "4", name: "Mexicana", image: "https://via.placeholder.com/150" },
-  ];
+// Componentes de cada sección del menú
+function HomeContent() {
+  const { tema, idioma } = useContext(AppContext);
 
   return (
-    <View style={styles.container}>
-      {/* Título */}
-      <Text style={styles.title}>Explora Categorías</Text>
-
-      {/* Lista de Categorías */}
-      <FlatList
-        data={categories}
-        keyExtractor={(item) => item.id}
-        numColumns={2}
-        renderItem={({ item }) => (
-          <TouchableOpacity style={styles.card}>
-            <Image source={{ uri: item.image }} style={styles.image} />
-            <Text style={styles.cardText}>{item.name}</Text>
-          </TouchableOpacity>
-        )}
-        contentContainerStyle={styles.list}
-      />
+    <View
+      style={tema === "claro" ? styles.lightContainer : styles.darkContainer}
+    >
+      <Text style={styles.headerText}>
+        {idioma === "en" ? "Welcome to Home" : "Bienvenido a Inicio"}
+      </Text>
     </View>
   );
-};
+}
+
+function Cuenta() {
+  return (
+    <View style={styles.main}>
+      <Text style={styles.headerText}>Cuenta</Text>
+    </View>
+  );
+}
+
+function Alergias() {
+  return (
+    <View style={styles.main}>
+      <Text style={styles.headerText}>
+        Alergias o Ingredientes Restringidos
+      </Text>
+    </View>
+  );
+}
+
+function PlatosContinuados() {
+  return (
+    <View style={styles.main}>
+      <Text style={styles.headerText}>Funcionalidad de Platos Continuados</Text>
+    </View>
+  );
+}
+
+function Mapa() {
+  return (
+    <View style={styles.main}>
+      <Text style={styles.headerText}>Mapa</Text>
+    </View>
+  );
+}
+
+function Configuracion() {
+  return (
+    <View style={styles.main}>
+      <Text style={styles.headerText}>Configuración</Text>
+    </View>
+  );
+}
+
+const Drawer = createDrawerNavigator();
+
+export default function HomeScreen() {
+  return (
+    <NavigationContainer>
+      <Drawer.Navigator initialRouteName="Inicio">
+        <Drawer.Screen name="Inicio" component={HomeContent} />
+        <Drawer.Screen name="Cuenta" component={Cuenta} />
+        <Drawer.Screen name="Alergias" component={Alergias} />
+        <Drawer.Screen
+          name="Platos Continuados"
+          component={PlatosContinuados}
+        />
+        <Drawer.Screen name="Mapa" component={Mapa} />
+        <Drawer.Screen name="Configuración" component={Configuracion} />
+      </Drawer.Navigator>
+    </NavigationContainer>
+  );
+}
 
 const styles = StyleSheet.create({
-  container: {
+  lightContainer: {
     flex: 1,
-    backgroundColor: "#fff",
-    padding: 20,
+    backgroundColor: "#f9f9f9",
+    justifyContent: "center",
+    alignItems: "center",
   },
-  title: {
+  darkContainer: {
+    flex: 1,
+    backgroundColor: "#282c34",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  headerText: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#333",
-    marginBottom: 20,
+    color: "#f1593e",
+    margin: 20,
+    textAlign: "center",
   },
-  list: {
-    justifyContent: "center",
-  },
-  card: {
+  main: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
-    borderRadius: 10,
-    margin: 10,
+    justifyContent: "center",
     alignItems: "center",
-    padding: 15,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 5,
-  },
-  image: {
-    width: 100,
-    height: 100,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  cardText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#333",
+    backgroundColor: "#f9f9f9",
   },
 });
-
-export default HomeScreen;

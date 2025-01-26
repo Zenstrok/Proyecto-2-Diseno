@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { StatusBar } from "react-native"; // Opcional: Control del color de la barra de estado
 import LoginScreen from "./Screens/LoginScreen";
 import HomeScreen from "./Screens/HomeScreen";
+import RegisterScreen from "./Screens/RegisterScreen"; // Importa la pantalla de registro
 
 const Stack = createStackNavigator();
 
@@ -35,6 +36,11 @@ export default function App() {
           name="Home"
           component={HomeScreen}
           options={{ title: "Inicio" }} // Opcional: Título personalizado
+        />
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
+          options={{ title: "Registro" }} // Opcional: Título personalizado
         />
       </Stack.Navigator>
     </NavigationContainer>

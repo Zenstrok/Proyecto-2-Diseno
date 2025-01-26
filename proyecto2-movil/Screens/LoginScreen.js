@@ -50,7 +50,13 @@ const LoginScreen = () => {
 
       {/* Texto de Registro */}
       <Text style={styles.registerText}>
-        ¿No tienes cuenta? <Text style={styles.registerLink}>Regístrate</Text>
+        ¿No tienes cuenta?{" "}
+        <Text
+          style={styles.registerLink}
+          onPress={() => navigation.navigate("Register")} // Navega a la pantalla Register
+        >
+          Regístrate
+        </Text>
       </Text>
     </View>
   );
