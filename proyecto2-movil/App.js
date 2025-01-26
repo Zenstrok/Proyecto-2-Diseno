@@ -1,20 +1,42 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { StatusBar } from "react-native"; // Opcional: Control del color de la barra de estado
+import LoginScreen from "./Screens/LoginScreen";
+import HomeScreen from "./Screens/HomeScreen";
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      {/* Barra de estado (opcional, puedes personalizar colores o estilos) */}
+      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+
+      {/* Navegador principal */}
+      <Stack.Navigator
+        initialRouteName="Login" // Ruta inicial, puede cambiar según el flujo
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "#4CAF50", // Cambiar el color del encabezado
+          },
+          headerTintColor: "#fff", // Color del texto en el encabezado
+          headerTitleStyle: {
+            fontWeight: "bold", // Estilo de fuente
+          },
+        }}
+      >
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ title: "Inicio de Sesión" }} // Opcional: Título personalizado
+        />
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ title: "Inicio" }} // Opcional: Título personalizado
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
