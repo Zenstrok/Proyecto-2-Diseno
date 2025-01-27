@@ -1,12 +1,20 @@
 import React from "react";
 import "./App.css";
-import { BrowserRouter as Routes, Route, Navigate } from "react-router-dom";
-import Inicio from "./pages/Inicio"; // Asegúrate de que Inicio.jsx esté en src/pages/
+import { Routes, Route, Navigate, useLocation, Link } from "react-router-dom";
+import Login from "./pages/Login";
+import Inicio from "./pages/Inicio";
+import Menu from "./pages/Menu";
+import Ingredientes from "./pages/Ingredientes";
+import Continuados from "./pages/Continuados";
+import Notificaciones from "./pages/Notificaciones";
+import Configuracion from "./pages/Configuracion";
+import { AppContext } from "./context/AppContext.jsx";
 
 function App() {
   const location = useLocation();
   const { tema, idioma, texto, user } = React.useContext(AppContext);
-  const hideNav = location.pathname === "/login";
+  const hideNav =
+    location.pathname === "/login" || location.pathname === "/registro";
 
   return (
     <div className={`App ${tema}`}>
@@ -17,16 +25,21 @@ function App() {
               <Link to="/inicio">{idioma === "en" ? "Home" : "Inicio"}</Link>
             </li>
             <li>
-              <Link to="/personajes">
-                {idioma === "en" ? "Characters" : "Personajes"}
+              <Link to="/menu">{idioma === "en" ? "Menu" : "Menú"}</Link>
+            </li>
+            <li>
+              <Link to="/ingredientes">
+                {idioma === "en" ? "Ingredients" : "Ingredientes"}
               </Link>
             </li>
             <li>
-              <Link to="/comics">{idioma === "en" ? "Comics" : "Cómics"}</Link>
+              <Link to="/continuados">
+                {idioma === "en" ? "Constant Orders" : "Pedidos Continuados"}
+              </Link>
             </li>
             <li>
-              <Link to="/creadores">
-                {idioma === "en" ? "Creators" : "Creadores"}
+              <Link to="/notificaciones">
+                {idioma === "en" ? "Notifications" : "Notificaciones"}
               </Link>
             </li>
             <li>
@@ -34,49 +47,19 @@ function App() {
                 {idioma === "en" ? "Settings" : "Ajustes"}
               </Link>
             </li>
-            {user && <li className="nombre-usuario">{user.name}</li>}
-            {user && (
-              <li className="imagen-usuario">
-                <img
-                  src={user.picture}
-                  alt="User"
-                  style={{ width: "40px", borderRadius: "50%" }}
-                />
-              </li>
-            )}
           </ul>
         </nav>
       )}
       <Routes>
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/inicio" element={<RutaProtegida element={Inicio} />} />
-        <Route
-          path="/personajes"
-          element={<RutaProtegida element={Personajes} />}
-        />
-        <Route path="/comics" element={<RutaProtegida element={Comics} />} />
-        <Route
-          path="/creadores"
-          element={<RutaProtegida element={Creadores} />}
-        />
-        <Route
-          path="/configuracion"
-          element={<RutaProtegida element={Configuracion} />}
-        />
-        <Route
-          path="/personaje/:id"
-          element={<RutaProtegida element={PersonajeDetalle} />}
-        />
-        <Route
-          path="/comic/:id"
-          element={<RutaProtegida element={ComicsDetalle} />}
-        />
-        <Route
-          path="/creador/:id"
-          element={<RutaProtegida element={CreadorDetalle} />}
-        />
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="/inicio" element={<Inicio />} />
+        <Route path="/menu" element={<Menu />} />
+        <Route path="/ingredientes" element={<Ingredientes />} />
+        <Route path="/continuados" element={<Continuados />} />
+        <Route path="/notificaciones" element={<Notificaciones />} />
+        <Route path="/configuracion" element={<Configuracion />} />
+        <Route path="*" element={<Navigate to="/inicio" />} />
       </Routes>
     </div>
   );

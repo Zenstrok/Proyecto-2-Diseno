@@ -1,48 +1,64 @@
 .App {
   text-align: center;
-  font-family: "Inter", sans-serif;
-  background-color: var(--background-color);
 }
 
-.App nav {
-  background-color: var(--nav-background-color);
-  padding: 1rem 2rem;
+.App.claro nav {
+  background-color: #fcf4f4;
+  padding: 1.5rem;
+}
+
+.App.oscuro nav {
+  background-color: #282c34;
+  padding: 1.5rem;
 }
 
 .App nav ul {
   list-style: none;
   padding: 0;
-  margin: 0;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
+  margin: 0.5rem 5rem;
 }
 
 .App nav ul li {
-  margin: 0 1rem;
+  margin: 0 10px;
 }
 
-.App nav ul li a {
+.App.claro nav ul li a {
   text-decoration: none;
-  color: var(--text-color);
-  font-size: 1rem;
-  transition: color 0.2s ease;
+  color: black;
+  font-size: 1.5rem;
+}
+
+.App.oscuro nav ul li a {
+  text-decoration: none;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.App.claro nav ul .nombre-usuario {
+  font-size: 1.5rem;
+  margin-left: auto;
+  color: black;
+}
+
+.App.oscuro nav ul .nombre-usuario {
+  font-size: 1.5rem;
+  margin-left: auto;
+  color: white;
+}
+
+.App nav ul .imagen-usuario {
+  display: flex;
+  align-items: center;
+}
+
+.App nav ul .imagen-usuario img {
+  width: 40px;
+  border-radius: 50%;
 }
 
 .App nav ul li a:hover {
-  color: var(--link-hover-color);
-}
-
-:root {
-  --background-color: #f4f4f9;
-  --nav-background-color: #ffffff;
-  --text-color: #333;
-  --link-hover-color: #007bff;
-}
-
-body.dark {
-  --background-color: #121212;
-  --nav-background-color: #282c34;
-  --text-color: #fff;
-  --link-hover-color: #90caf9;
+  text-decoration: underline;
 }
