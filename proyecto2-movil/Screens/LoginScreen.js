@@ -1,117 +1,77 @@
-import React from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-} from "react-native";
-import { useNavigation } from "@react-navigation/native"; // Importa useNavigation
+import React, { useState, useContext } from "react";
+import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import { AppContext } from "../Context/AppContext"; // Importa el AppContext
 
-const LoginScreen = () => {
-  const navigation = useNavigation(); // Inicializa la navegación
+const LoginScreen = ({ navigation }) => {
+  const { state, dispatch } = useContext(AppContext);
+  const { isDarkMode, isEnglish } = state;
+  const [correo, setCorreo] = useState("");
+  const [contraseña, setContraseña] = useState("");
+
+  const manejarIngreso = () => {
+    // Lógica de autenticación
+    if (correo === "qwert" && contraseña === "12345") {
+      dispatch({ type: "LOGIN", payload: { name: "Usuario" } });
+      navigation.navigate("House");
+    } else {
+      alert(
+        isEnglish
+          ? "Incorrect email or password"
+          : "Correo o contraseña incorrectos"
+      );
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      {/* Logo */}
-      <Image
-        source={{
-          uri: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_Eats_Logo.svg",
-        }}
-        style={styles.logo}
-      />
-
-      {/* Título */}
-      <Text style={styles.title}>Inicia Sesión</Text>
-
-      {/* Campo de Correo */}
-      <TextInput
-        placeholder="Correo electrónico"
-        placeholderTextColor="#999"
-        style={styles.input}
-      />
-
-      {/* Campo de Contraseña */}
-      <TextInput
-        placeholder="Contraseña"
-        placeholderTextColor="#999"
-        secureTextEntry={true}
-        style={styles.input}
-      />
-
-      {/* Botón de Iniciar Sesión */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("Home")} // Navega a la pantalla Home
-      >
-        <Text style={styles.buttonText}>Ingresar</Text>
-      </TouchableOpacity>
-
-      {/* Texto de Registro */}
-      <Text style={styles.registerText}>
-        ¿No tienes cuenta?{" "}
-        <Text
-          style={styles.registerLink}
-          onPress={() => navigation.navigate("Register")} // Navega a la pantalla Register
-        >
-          Regístrate
-        </Text>
+    <View
+      style={[
+        styles.contenedor,
+        { backgroundColor: isDarkMode ? "#333" : "#ffffff" },
+      ]}
+    >
+      <Text style={[styles.titulo, { color: isDarkMode ? "#fff" : "#000" }]}>
+        {isEnglish ? "Login" : "Inicio de Sesión"}
       </Text>
+      <TextInput
+        style={styles.entrada}
+        placeholder={isEnglish ? "Email" : "Correo electrónico"}
+        keyboardType="email-address"
+        value={correo}
+        onChangeText={setCorreo}
+      />
+      <TextInput
+        style={styles.entrada}
+        placeholder={isEnglish ? "Password" : "Contraseña"}
+        secureTextEntry
+        value={contraseña}
+        onChangeText={setContraseña}
+      />
+      <Button
+        title={isEnglish ? "Login" : "Ingresar"}
+        onPress={manejarIngreso}
+      />
+      <Button
+        title={isEnglish ? "Register" : "Registrarse"}
+        onPress={() => navigation.navigate("Register")}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
-  },
-  logo: {
-    width: 150,
-    height: 150,
-    marginBottom: 20,
-  },
-  title: {
+  contenedor: { flex: 1, padding: 20 },
+  titulo: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
-    color: "#333",
+    textAlign: "center",
   },
-  input: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "#f5f5f5",
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    marginVertical: 10,
+  entrada: {
     borderWidth: 1,
     borderColor: "#ccc",
-  },
-  button: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "#000",
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 20,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  registerText: {
-    fontSize: 14,
-    color: "#999",
-  },
-  registerLink: {
-    color: "#000",
-    fontWeight: "bold",
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 15,
   },
 });
 
