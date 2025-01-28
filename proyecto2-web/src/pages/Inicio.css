@@ -1,150 +1,453 @@
-/* General */
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%; /* Asegura que ocupen toda la altura del viewport */
-  width: 100%;
-  font-family: "Roboto", sans-serif;
-  background-color: #f9f9f9;
-  color: #1a1a1a; /* Texto negro para modo claro */
-  transition: background-color 0.3s ease, color 0.3s ease;
+:root {
+  --primary-color: #ff6b6b;
+  --background-light: #ffffff;
+  --background-dark: #2d3436;
+  --text-light: #2d3436;
+  --text-dark: #ffffff;
 }
 
-.dark-mode {
-  background-color: #1f1f1f;
-  color: #e0e0e0; /* Texto claro para modo oscuro */
-}
-
-/* Ajusta el contenedor principal */
 .inicio {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Ocupa toda la altura del viewport */
-  width: 100%; /* Extiende el ancho */
-  box-sizing: border-box;
+  background-color: var(--background-light);
+  color: var(--text-light);
+  transition: all 0.3s ease;
 }
 
-/* El contenido principal crece para llenar el espacio */
-.main-content {
-  flex: 1; /* Hace que el contenido principal ocupe todo el espacio disponible */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-  padding: 2rem;
-  width: 100%; /* Extiende el ancho */
-  box-sizing: border-box;
-  background-color: inherit; /* Hereda el color de fondo global */
+.inicio.dark-mode {
+  background-color: var(--background-dark);
+  color: var(--text-dark);
 }
 
 /* Header */
 .header {
-  background-color: #ffffff;
-  color: #1a1a1a;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 1rem 2rem;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: var(--primary-color);
+  color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.dark-mode .header {
-  background-color: #333333;
-  color: #ffffff;
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.header-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.notificaciones-btn {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.badge {
+  background: white;
+  color: var(--primary-color);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: white;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--primary-color);
+}
+
+/* Pedidos Grid */
+.pedidos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.pedido-card {
+  background: var(--background-light);
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  border-left: 5px solid;
+  transition: transform 0.2s;
+}
+
+.dark-mode .pedido-card {
+  background: #404040;
+}
+
+.pedido-card:hover {
+  transform: translateY(-3px);
+}
+
+.pedido-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.prioridad {
+  font-size: 0.8rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
+  color: rgb(0, 0, 0);
+}
+
+.pedido-card.alta .prioridad { background: #ff7675; }
+.pedido-card.media .prioridad { background: #fdcb6e; }
+
+.tiempo {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.dark-mode .tiempo {
+  color: #ccc;
+}
+
+.modificaciones {
+  background: rgba(255,229,100,0.2);
+  padding: 0.5rem;
+  border-radius: 5px;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.pedido-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.estado-selector select {
+  padding: 0.3rem 0.5rem;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.completar-btn {
+  background: none;
+
+  padding: 0.3rem 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Historial */
+.historial-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.historial-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem;
+  background: rgba(255,255,255,0.1);
+  border-radius: 5px;
+}
+
+.estado-badge {
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  font-size: 0.8rem;
 }
 
 /* Footer */
 .footer {
-  background: #ffffff;
-  color: #1a1a1a;
-  text-align: center;
+  background: var(--primary-color);
+  color: white;
   padding: 1rem;
-  width: 100%; /* Extiende el ancho del footer */
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Sombra para distinguir */
+  margin-top: auto;
 }
 
-.dark-mode .footer {
-  background: #333333;
-  color: #ffffff;
+.footer-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* Dashboard Cards */
-.dashboard-card {
-  background: #ffffff; /* Fondo blanco */
-  color: #1a1a1a; /* Texto negro */
-  border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
 }
 
-.dark-mode .dashboard-card {
-  background: #333333; /* Fondo oscuro */
-  color: #ffffff; /* Texto claro */
+.footer-links a {
+  color: white;
+  text-decoration: none;
 }
 
-/* Pedidos activos */
-.pedidos-activos h2 {
-  color: #1a1a1a; /* Texto negro para el título */
+/* Dark Mode */
+.dark-mode .pedido-card {
+  background: #2d2d2d;
+  color: white;
 }
 
-.dark-mode .pedidos-activos h2 {
-  color: #ffffff; /* Texto claro */
+.dark-mode .modificaciones {
+  background: rgba(255,229,100,0.1);
 }
 
-.pedidos-table {
+/* Variables de Color */
+:root {
+  --primary-color: #ff6b6b;
+  --background-light: #ffffff;
+  --background-dark: #2d3436;
+  --text-light: #2d3436;
+  --text-dark: #ffffff;
+
+  /* Nuevas Variables para Pedidos Completados */
+  --historial-bg-light: #ffffff;
+  --historial-bg-dark: #3d3d3d;
+  --historial-text-light: #2d3436;
+  --historial-text-dark: #ffffff;
+  
+  /* Nuevas Variables para la Barra de Búsqueda */
+  --search-bg-light: #f9f9f9;
+  --search-bg-dark: #555555;
+  --search-border-light: #ccc;
+  --search-border-dark: #777777;
+  --search-text-light: #2d3436;
+  --search-text-dark: #ffffff;
+  --search-placeholder-light: #999999;
+  --search-placeholder-dark: #cccccc;
+  --search-icon-color-light: #666666;
+  --search-icon-color-dark: #cccccc;
+  
+  /* Badge de Estado */
+  --badge-listo-bg: #66BB6A;
+  --badge-listo-text: #ffffff;
+}
+
+/* Sección de Pedidos Completados */
+.historial-section {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: var(--historial-bg-light);
+  color: var(--historial-text-light);
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Ajustes para Modo Oscuro */
+.inicio.dark-mode .historial-section {
+  background-color: var(--historial-bg-dark);
+  color: var(--historial-text-dark);
+}
+
+/* Lista de Pedidos Completados */
+.historial-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Ítem Individual del Historial */
+.historial-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  background-color: rgba(255, 107, 107, 0.05);
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+/* Ajustes en Modo Oscuro */
+.inicio.dark-mode .historial-item {
+  background-color: rgba(255, 107, 107, 0.1);
+}
+
+/* Información del Pedido en el Historial */
+.historial-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.historial-info span {
+  font-size: 0.9rem;
+  color: inherit;
+}
+
+/* Badge de Estado */
+.estado-badge {
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  background-color: var(--badge-listo-bg);
+  color: var(--badge-listo-text);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* Hover en Ítem del Historial */
+.historial-item:hover {
+  background-color: rgba(255, 107, 107, 0.1);
+}
+
+.inicio.dark-mode .historial-item:hover {
+  background-color: rgba(255, 107, 107, 0.15);
+}
+
+/* Barra de Búsqueda */
+.historial-filters {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 1rem;
+}
+
+/* Contenedor de Búsqueda */
+.search-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Campo de Búsqueda */
+.search-input {
+  width: 100%;
+  padding: 0.6rem 2.5rem 0.6rem 1rem;
+  border: 1px solid var(--search-border-light);
+  border-radius: 25px;
+  font-size: 1rem;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  background-color: var(--search-bg-light);
+  color: var(--search-text-light);
+}
+
+.inicio.dark-mode .search-input {
+  background-color: var(--search-bg-dark);
+  color: var(--search-text-dark);
+  border: 1px solid var(--search-border-dark);
+}
+
+/* Efecto al Enfocar el Campo de Búsqueda */
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 5px rgba(255, 107, 107, 0.5);
+}
+
+.inicio.dark-mode .search-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 5px rgba(255, 107, 107, 0.5);
+}
+
+/* Icono de Búsqueda */
+.search-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 1.2rem;
+  color: var(--search-icon-color-light);
+}
+
+.inicio.dark-mode .search-icon {
+  color: var(--search-icon-color-dark);
+}
+
+.historial-table {
   width: 100%;
   border-collapse: collapse;
+  background-color: var(--historial-bg-light);
+  color: var(--historial-text-light);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.pedidos-table th {
-  background: #4caf50; /* Fondo verde */
-  color: #ffffff; /* Texto blanco */
+.inicio.dark-mode .historial-table {
+  background-color: var(--historial-bg-dark);
+  color: var(--historial-text-dark);
 }
 
-.pedidos-table td {
-  background: #ffffff; /* Fondo blanco para celdas */
-  color: #1a1a1a; /* Texto negro */
+.historial-table th, .historial-table td {
+  padding: 0.8rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
 }
 
-.dark-mode .pedidos-table td {
-  background: #333333; /* Fondo oscuro */
-  color: #e0e0e0; /* Texto claro */
+.historial-table th {
+  background-color: var(--primary-color);
+  color: white;
 }
 
-/* Botones */
-.btn-accion {
-  background: #4caf50; /* Fondo verde */
-  color: #ffffff; /* Texto blanco */
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.3s ease;
+.historial-row:nth-child(even) {
+  background-color: rgba(255, 107, 107, 0.05);
 }
 
-.btn-accion:hover {
-  background: #45a049; /* Verde más oscuro */
+.inicio.dark-mode .historial-row:nth-child(even) {
+  background-color: rgba(255, 107, 107, 0.1);
 }
 
-.dark-mode .btn-accion {
-  background: #4caf50; /* Misma apariencia en modo oscuro */
-  color: #ffffff; /* Texto claro */
+.historial-row:hover {
+  background-color: rgba(255, 107, 107, 0.1);
 }
 
-/* Notificaciones */
-.notificaciones h2, .notificaciones p {
-  color: #1a1a1a; /* Texto negro en modo claro */
+.inicio.dark-mode .historial-row:hover {
+  background-color: rgba(255, 107, 107, 0.15);
 }
 
-.dark-mode .notificaciones h2, .dark-mode .notificaciones p {
-  color: #ffffff; /* Texto claro en modo oscuro */
-}
+/* Responsividad para la barra de búsqueda y la tabla */
+@media (max-width: 768px) {
+  .historial-filters {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-/* Historial de pedidos */
-.historial-pedidos h2 {
-  color: #1a1a1a; /* Títulos en negro */
-}
+  .search-container {
+    width: 100%;
+    max-width: none;
+  }
 
-.dark-mode .historial-pedidos h2 {
-  color: #ffffff; /* Títulos claros */
+  .search-input {
+    font-size: 0.9rem;
+  }
 }

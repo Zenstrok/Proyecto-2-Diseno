@@ -4,151 +4,218 @@ import "./Inicio.css";
 const Inicio = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [pedidos, setPedidos] = useState([
-    { id: 1, cliente: "Juan Pérez", plato: "Pasta Alfredo", estado: "En preparación", modificado: false, tiempoEstimado: "15 min" },
-    { id: 2, cliente: "Maria López", plato: "Pizza Margarita", estado: "Listo", modificado: true, tiempoEstimado: "10 min" },
+    { 
+      id: 1, 
+      cliente: "Juan Pérez", 
+      platos: ["Pasta Alfredo"], 
+      modificaciones: "Sin gluten, salsa aparte", 
+      estado: "recibido", 
+      prioridad: "alta", 
+      horaPedido: new Date(),
+      horaCompletado: null
+    },
+    { 
+      id: 2, 
+      cliente: "Maria López", 
+      platos: ["Pizza Margarita"], 
+      modificaciones: "", 
+      estado: "recibido", 
+      prioridad: "media", 
+      horaPedido: new Date(),
+      horaCompletado: null
+    }
   ]);
-  const [nuevasNotificaciones, setNuevasNotificaciones] = useState(0);
-  const [historialPedidos, setHistorialPedidos] = useState([]);
 
-  // Simula notificaciones de nuevos pedidos
+  const [historialPedidos, setHistorialPedidos] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const estadosConfig = {
+    recibido: { 
+      color: "#FFA726", 
+      accion: "Iniciar preparación" 
+    },
+    "en preparación": { 
+      color: "#29B6F6", 
+      accion: "Terminar preparación" 
+    },
+    listo: { 
+      color: "#66BB6A", 
+      accion: "Pedido Listo" 
+    }
+  };
+
+  const manejarProgreso = (pedido) => {
+    const nuevosPedidos = [...pedidos];
+    const index = nuevosPedidos.findIndex(p => p.id === pedido.id);
+    
+    switch(pedido.estado) {
+      case "recibido":
+        nuevosPedidos[index].estado = "en preparación";
+        break;
+      case "en preparación":
+        nuevosPedidos[index].estado = "listo";
+        nuevosPedidos[index].horaCompletado = new Date();
+        setTimeout(() => {
+          setHistorialPedidos(prev => [...prev, nuevosPedidos[index]]);
+          setPedidos(prev => prev.filter(p => p.id !== pedido.id));
+        }, 2000);
+        break;
+      default:
+        break;
+    }
+    
+    setPedidos(nuevosPedidos);
+  };
+
   useEffect(() => {
     const interval = setInterval(() => {
       const nuevoPedido = {
         id: pedidos.length + 1,
         cliente: `Cliente ${pedidos.length + 1}`,
-        plato: "Nuevo plato",
-        estado: "Pendiente",
-        modificado: false,
-        tiempoEstimado: "20 min",
+        platos: ["Nuevo plato"],
+        modificaciones: Math.random() > 0.5 ? "Modificación especial" : "",
+        estado: "recibido",
+        prioridad: ["alta", "media"][Math.floor(Math.random() * 2)],
+        horaPedido: new Date(),
+        horaCompletado: null
       };
-      setPedidos((prevPedidos) => [...prevPedidos, nuevoPedido]);
-      setNuevasNotificaciones((prev) => prev + 1);
-    }, 10000); // Cada 10 segundos llega un nuevo pedido
+      
+      setPedidos(prev => [...prev, nuevoPedido]);
+    }, 15000);
 
     return () => clearInterval(interval);
-  }, [pedidos]);
+  }, [pedidos.length]);
 
-  // Actualiza el estado de un pedido
-  const actualizarEstado = (id, nuevoEstado) => {
-    setPedidos((prevPedidos) =>
-      prevPedidos.map((pedido) =>
-        pedido.id === id
-          ? { ...pedido, estado: nuevoEstado, modificado: false }
-          : pedido
-      )
+  const filteredHistorial = historialPedidos.filter(pedido => {
+    const searchLower = searchQuery.toLowerCase();
+    return (
+      pedido.cliente.toLowerCase().includes(searchLower) ||
+      pedido.id.toString().includes(searchLower)
     );
-  };
-
-  // Mueve un pedido al historial
-  const completarPedido = (id) => {
-    setPedidos((prevPedidos) => {
-      const pedidoCompletado = prevPedidos.find((pedido) => pedido.id === id);
-      setHistorialPedidos((prevHistorial) => [...prevHistorial, pedidoCompletado]);
-      return prevPedidos.filter((pedido) => pedido.id !== id);
-    });
-  };
+  });
 
   return (
-    <div className={darkMode ? "inicio dark-mode" : "inicio"}>
-      {/* Barra de navegación */}
+    <div className={`inicio ${darkMode ? "dark-mode" : ""}`}>
       <header className="header">
-        <div className="logo">🍴 Cocina Express</div>
-        <div className="actions">
-          <button
-            className="toggle-theme"
-            onClick={() => setDarkMode((prev) => !prev)}
-          >
-            {darkMode ? "☀️ Claro" : "🌙 Oscuro"}
-          </button>
-          <button className="logout">Cerrar sesión</button>
+        <div className="logo">
+          <span role="img" aria-label="chef">👨🍳</span> Cocina Express
         </div>
+        <button 
+          className="theme-toggle"
+          onClick={() => setDarkMode(!darkMode)}
+        >
+          {darkMode ? "☀️ Claro" : "🌙 Oscuro"}
+        </button>
       </header>
 
-      {/* Contenido principal */}
       <main className="main-content">
-        <section className="notificaciones">
-          <h2>Notificaciones</h2>
-          <p>
-            {nuevasNotificaciones > 0
-              ? `Tienes ${nuevasNotificaciones} nuevo(s) pedido(s).`
-              : "Sin nuevas notificaciones."}
-          </p>
+        <section className="pedidos-section">
+          <h2 className="section-title">
+            Pedidos Activos ({pedidos.length})
+          </h2>
+          
+          <div className="pedidos-grid">
+            {pedidos.sort((a, b) => {
+              const prioridadOrden = { alta: 1, media: 2 };
+              return prioridadOrden[a.prioridad] - prioridadOrden[b.prioridad];
+            }).map(pedido => (
+              <div 
+                key={pedido.id} 
+                className={`pedido-card ${pedido.prioridad}`}
+                style={{ borderColor: estadosConfig[pedido.estado].color }}
+              >
+                <div className="pedido-header">
+                  <div className="pedido-info">
+                    <h3>#{pedido.id} - {pedido.cliente}</h3>
+                    <span className="prioridad">{pedido.prioridad.toUpperCase()}</span>
+                  </div>
+                  <span className="tiempo">
+                    {new Date(pedido.horaPedido).toLocaleTimeString()}
+                  </span>
+                </div>
+                
+                <div className="pedido-body">
+                  <div className="platos">
+                    <strong>Platos:</strong> {pedido.platos.join(", ")}
+                  </div>
+                  
+                  {pedido.modificaciones && (
+                    <div className="modificaciones">
+                      <strong>Modificaciones:</strong>
+                      <p>{pedido.modificaciones}</p>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="pedido-footer">
+                  <button
+                    className="accion-btn"
+                    onClick={() => manejarProgreso(pedido)}
+                    style={{ 
+                      backgroundColor: estadosConfig[pedido.estado].color,
+                      opacity: pedido.estado === "listo" ? 0.7 : 1
+                    }}
+                    disabled={pedido.estado === "listo"}
+                  >
+                    {estadosConfig[pedido.estado].accion}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </section>
 
-        <section className="pedidos-activos">
-          <h2>Pedidos activos</h2>
-          <table className="pedidos-table">
+        <section className="historial-section">
+          <h2 className="section-title">Pedidos Completados ({historialPedidos.length})</h2>
+          
+          <div className="historial-filters">
+            <input 
+              type="text" 
+              placeholder="Buscar por cliente o ID..." 
+              className="search-input"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          
+          <table className="historial-table">
             <thead>
               <tr>
-                <th>Número</th>
+                <th>ID</th>
                 <th>Cliente</th>
-                <th>Plato</th>
+                <th>Platos</th>
+                <th>Modificaciones</th> {/* Nueva columna agregada */}
+                <th>Prioridad</th>
+                <th>Hora Pedido</th>
+                <th>Hora Completado</th>
                 <th>Estado</th>
-                <th>Tiempo estimado</th>
-                <th>Acción</th>
               </tr>
             </thead>
             <tbody>
-              {pedidos.map((pedido) => (
-                <tr key={pedido.id} className={pedido.modificado ? "modificado" : ""}>
+              {filteredHistorial.map(pedido => (
+                <tr key={pedido.id} className="historial-row">
                   <td>#{pedido.id}</td>
                   <td>{pedido.cliente}</td>
-                  <td>{pedido.plato}</td>
-                  <td>{pedido.estado}</td>
-                  <td>{pedido.tiempoEstimado}</td>
+                  <td>{pedido.platos.join(", ")}</td>
+                  <td className="modificaciones-historial">
+                    {pedido.modificaciones || "Ninguna"}
+                  </td>
+                  <td className={`prioridad ${pedido.prioridad}`}>
+                    {pedido.prioridad.toUpperCase()}
+                  </td>
+                  <td>{new Date(pedido.horaPedido).toLocaleTimeString()}</td>
+                  <td>{pedido.horaCompletado ? new Date(pedido.horaCompletado).toLocaleTimeString() : "-"}</td>
                   <td>
-                    <button
-                      className="btn-accion"
-                      onClick={() => actualizarEstado(pedido.id, "Listo")}
-                    >
-                      Marcar como Listo
-                    </button>
-                    <button
-                      className="btn-accion"
-                      onClick={() => completarPedido(pedido.id)}
-                    >
-                      Completar
-                    </button>
+                    <span className="estado-badge listo">
+                      ✅ Listo
+                    </span>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </section>
-
-        <section className="historial-pedidos">
-          <h2>Historial de pedidos</h2>
-          {historialPedidos.length > 0 ? (
-            <table className="pedidos-table">
-              <thead>
-                <tr>
-                  <th>Número</th>
-                  <th>Cliente</th>
-                  <th>Plato</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
-              <tbody>
-                {historialPedidos.map((pedido) => (
-                  <tr key={pedido.id}>
-                    <td>#{pedido.id}</td>
-                    <td>{pedido.cliente}</td>
-                    <td>{pedido.plato}</td>
-                    <td>{pedido.estado}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <p>No hay pedidos en el historial.</p>
-          )}
-        </section>
       </main>
-
-      <footer className="footer">
-        © 2025 Cocina Express. <a href="#soporte">Soporte técnico</a> |{" "}
-        <a href="#privacidad">Política de privacidad</a>
-      </footer>
     </div>
   );
 };
