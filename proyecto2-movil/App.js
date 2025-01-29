@@ -9,6 +9,7 @@ import Configuracion from "./Screens/Configuracion"; // Importa la pantalla de c
 import Mapa from "./Screens/Mapa"; // Importa la pantalla de mapa
 import PlatosContinuados from "./Screens/PlatosContinuados"; // Importa la pantalla de platos continuados
 import Cuenta from "./Screens/Cuenta"; // Importa la pantalla de cuenta
+import Restaurants from "./Screens/Restaurants"; // Importa la pantalla de restaurantes
 import { AppContext, initialState, reducer } from "./Context/AppContext"; // Importa el AppContext
 
 const Stack = createStackNavigator();
@@ -54,6 +55,11 @@ export default function App() {
             name="Configuracion"
             component={Configuracion}
             options={{ title: "Configuración" }} // Opcional: Título personalizado
+          />
+          <Stack.Screen
+            name="Restaurants"
+            component={Restaurants}
+            options={{ title: "Restaurantes" }} // Opcional: Título personalizado
           />
           <Stack.Screen
             name="Mapa"

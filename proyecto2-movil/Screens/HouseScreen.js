@@ -31,8 +31,8 @@ const HouseScreen = ({ navigation }) => {
           onPress={() => navigation.navigate("Configuracion")}
         />
         <Button
-          title={isEnglish ? "Map" : "Mapa"}
-          onPress={() => navigation.navigate("Mapa")}
+          title={isEnglish ? "Restaurants" : "Restaurantes"}
+          onPress={() => navigation.navigate("Restaurants")}
         />
         <Button
           title={isEnglish ? "Continued Dishes" : "Platos Continuados"}

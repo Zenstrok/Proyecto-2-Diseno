@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { AppContext } from "../Context/AppContext";
 
-export default function Mapa() {
+export default function Restaurants() {
   const { state } = useContext(AppContext);
   const { isDarkMode, isEnglish } = state;
 
@@ -16,7 +16,7 @@ export default function Mapa() {
       <Text
         style={[styles.headerText, { color: isDarkMode ? "#fff" : "#f1593e" }]}
       >
-        {isEnglish ? "Map" : "Mapa"}
+        {isEnglish ? "Restaurants" : "Restaurantes"}
       </Text>
     </View>
   );
