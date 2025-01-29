@@ -1,9 +1,13 @@
 import React, { useContext } from "react";
 import { AppContext } from "/src/context/AppContext";
+import { selectData } from "/src/services/supabase";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
   const { idioma, tema } = useContext(AppContext);
+  const navigate = useNavigate();
+
+  console.log(selectData("provincias", "*"));
 
   return (
     <div className={`Login ${tema}`}>
@@ -26,6 +30,9 @@ function Login() {
           </div>
           <button type="submit">
             {idioma === "en" ? "Login" : "Iniciar sesión"}
+          </button>
+          <button type="button" onClick={() => navigate("/registro")}>
+            {idioma === "en" ? "Register" : "Registrarse"}
           </button>
         </form>
       </main>
