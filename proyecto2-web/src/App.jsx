@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import { Routes, Route, Navigate, useLocation, Link } from "react-router-dom";
 import Login from "./pages/Login";
+import Registro from "./pages/Registro";
 import Inicio from "./pages/Inicio";
 import Menu from "./pages/Menu";
 import Ingredientes from "./pages/Ingredientes";
@@ -53,6 +54,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/registro" element={<Registro />} />
         <Route path="/inicio" element={<Inicio />} />
         <Route path="/menu" element={<Menu />} />
         <Route path="/ingredientes" element={<Ingredientes />} />
