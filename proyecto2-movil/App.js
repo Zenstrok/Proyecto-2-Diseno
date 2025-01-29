@@ -6,7 +6,6 @@ import LoginScreen from "./Screens/LoginScreen";
 import HouseScreen from "./Screens/HouseScreen";
 import RegisterScreen from "./Screens/RegisterScreen"; // Importa la pantalla de registro
 import Configuracion from "./Screens/Configuracion"; // Importa la pantalla de configuración
-import Mapa from "./Screens/Mapa"; // Importa la pantalla de mapa
 import PlatosContinuados from "./Screens/PlatosContinuados"; // Importa la pantalla de platos continuados
 import Cuenta from "./Screens/Cuenta"; // Importa la pantalla de cuenta
 import Restaurants from "./Screens/Restaurants"; // Importa la pantalla de restaurantes
@@ -60,11 +59,6 @@ export default function App() {
             name="Restaurants"
             component={Restaurants}
             options={{ title: "Restaurantes" }} // Opcional: Título personalizado
-          />
-          <Stack.Screen
-            name="Mapa"
-            component={Mapa}
-            options={{ title: "Mapa" }} // Opcional: Título personalizado
           />
           <Stack.Screen
             name="PlatosContinuados"
