@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { newHashPassword } from "/src/services/hashUtils";
-import { insertData, selectData } from "/src/services/supabase";
+import { insertData, supabase } from "/src/services/supabase";
 
 function Registro() {
   const [formData, setFormData] = useState({
@@ -8,7 +8,7 @@ function Registro() {
     apellido1: "",
     apellido2: "",
     telefono: "",
-    correo: "",
+    correoelectronico: "",
     provincia: "",
     canton: "",
     distrito: "",
@@ -17,55 +17,114 @@ function Registro() {
   });
 
   const [message, setMessage] = useState("");
+  const [provincias, setProvincias] = useState([]);
+  const [cantones, setCantones] = useState([]);
+  const [distritos, setDistritos] = useState([]);
+
+  useEffect(() => {
+    const importarProvincias = async () => {
+      const { data, error } = await supabase.from("provincias").select("*");
+      if (error) {
+        console.error("Error importing provincias:", error);
+      } else {
+        setProvincias(data);
+      }
+    };
+    importarProvincias();
+  }, []);
+
+  const importarCantones = async (idprovincia) => {
+    try {
+      const { data, error } = await supabase
+        .from("cantones")
+        .select("*")
+        .eq("idprovincia", idprovincia);
+      if (error) {
+        throw error;
+      }
+      setCantones(data);
+    } catch (error) {
+      console.error("Error importing cantones:", error);
+      setCantones([]);
+    }
+  };
+
+  const importarDistritos = async (idcanton) => {
+    try {
+      const { data, error } = await supabase
+        .from("distritos")
+        .select("*")
+        .eq("idcanton", idcanton);
+      if (error) {
+        throw error;
+      }
+      setDistritos(data);
+    } catch (error) {
+      console.error("Error importing distritos:", error);
+      setDistritos([]);
+    }
+  };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+
+    if (name === "provincia") {
+      importarCantones(value);
+      setFormData((prevData) => ({
+        ...prevData,
+        canton: "",
+        distrito: "",
+      }));
+      setDistritos([]);
+    }
+
+    if (name === "canton") {
+      importarDistritos(value);
+      setFormData((prevData) => ({
+        ...prevData,
+        distrito: "",
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const {
+      password,
       nombre,
       apellido1,
       apellido2,
       telefono,
-      correo,
+      correoelectronico,
       provincia,
       canton,
       distrito,
       direccion,
-      password,
     } = formData;
-
-    // Verificar si el usuario ya existe
-    const usuarios = await selectData("usuarios", "telefono");
-    if (usuarios && usuarios.some((usuario) => usuario.telefono === telefono)) {
-      setMessage("El usuario ya existe.");
-      return;
-    }
-
-    // Hashear la contraseña
-    const hash = await newHashPassword(password);
-
-    // Datos a insertar en la BD
+    const { salt, hash } = await newHashPassword(password);
     const newUser = {
       nombre,
       apellido1,
       apellido2,
-      telefono,
-      correo,
-      provincia,
-      canton,
-      distrito,
-      direccion,
-      tema: "Claro",
-      idioma: "Español",
-      texto: "Mediano",
-      salt: "",
-      hash,
+      telefono: parseInt(telefono, 10),
+      correoelectronico,
+      idprovincia: parseInt(provincia, 10),
+      idcanton: parseInt(canton, 10),
+      iddistrito: parseInt(distrito, 10),
+      direccionexacta: direccion,
+      idtema: 1,
+      ididioma: 1,
+      idtexto: 1,
+      salt: salt || "",
+      hash: hash,
     };
 
     // Insertar en la base de datos
+    console.log(newUser);
     const result = await insertData("usuarios", newUser);
     if (result) {
       setMessage("Usuario registrado con éxito.");
@@ -74,7 +133,7 @@ function Registro() {
         apellido1: "",
         apellido2: "",
         telefono: "",
-        correo: "",
+        correoelectronico: "",
         provincia: "",
         canton: "",
         distrito: "",
@@ -96,70 +155,79 @@ function Registro() {
           placeholder="Nombre"
           value={formData.nombre}
           onChange={handleChange}
-          required
         />
         <input
           type="text"
           name="apellido1"
-          placeholder="Apellido 1"
+          placeholder="Primer Apellido"
           value={formData.apellido1}
           onChange={handleChange}
-          required
         />
         <input
           type="text"
           name="apellido2"
-          placeholder="Apellido 2"
+          placeholder="Segundo Apellido"
           value={formData.apellido2}
           onChange={handleChange}
         />
         <input
-          type="tel"
+          type="text"
           name="telefono"
           placeholder="Teléfono"
           value={formData.telefono}
           onChange={handleChange}
-          required
         />
         <input
           type="email"
-          name="correo"
-          placeholder="Correo"
-          value={formData.correo}
+          name="correoelectronico"
+          placeholder="Correo Electrónico"
+          value={formData.correoelectronico}
           onChange={handleChange}
-          required
         />
-        <input
-          type="text"
+        <select
           name="provincia"
-          placeholder="Provincia"
           value={formData.provincia}
           onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
+        >
+          <option value="">Seleccione una provincia</option>
+          {provincias.map((provincia) => (
+            <option key={provincia.id} value={provincia.id}>
+              {provincia.nombre}
+            </option>
+          ))}
+        </select>
+        <select
           name="canton"
-          placeholder="Cantón"
           value={formData.canton}
           onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
+          disabled={!formData.provincia}
+        >
+          <option value="">Seleccione un cantón</option>
+          {cantones.map((canton) => (
+            <option key={canton.id} value={canton.id}>
+              {canton.nombre}
+            </option>
+          ))}
+        </select>
+        <select
           name="distrito"
-          placeholder="Distrito"
           value={formData.distrito}
           onChange={handleChange}
-          required
-        />
+          disabled={!formData.canton}
+        >
+          <option value="">Seleccione un distrito</option>
+          {distritos.map((distrito) => (
+            <option key={distrito.id} value={distrito.id}>
+              {distrito.nombre}
+            </option>
+          ))}
+        </select>
         <input
           type="text"
           name="direccion"
-          placeholder="Dirección Exacta"
+          placeholder="Dirección"
           value={formData.direccion}
           onChange={handleChange}
-          required
         />
         <input
           type="password"
@@ -167,9 +235,8 @@ function Registro() {
           placeholder="Contraseña"
           value={formData.password}
           onChange={handleChange}
-          required
         />
-        <button type="submit">Registrarse</button>
+        <button type="submit">Registrar</button>
       </form>
       {message && <p>{message}</p>}
     </div>

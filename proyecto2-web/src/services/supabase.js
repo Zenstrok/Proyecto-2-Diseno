@@ -6,11 +6,10 @@ export const supabase = createClient(
 );
 
 export async function insertData(table, data) {
-  const { error } = await supabase.from(table).insert(data);
-  return !error;
-}
-
-export async function selectData(table, columns) {
-  const { data, error } = await supabase.from(table).select(columns);
-  return data;
+  const { error } = await supabase.from(table).insert([data]);
+  if (error) {
+    console.error("Error inserting data:", error);
+    return false;
+  }
+  return true;
 }

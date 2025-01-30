@@ -1,23 +1,48 @@
 import React, { useState, useContext } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
-import { AppContext } from "../Context/AppContext"; // Importa el AppContext
+import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { AppContext } from "../Context/AppContext";
+import { supabase } from "../services/supabase";
 
 const LoginScreen = ({ navigation }) => {
-  const { state, dispatch } = useContext(AppContext);
+  const { state } = useContext(AppContext);
   const { isDarkMode, isEnglish } = state;
-  const [correo, setCorreo] = useState("");
-  const [contraseña, setContraseña] = useState("");
+  const [formData, setFormData] = useState({ usuario: "", password: "" });
+  const [message, setMessage] = useState("");
 
-  const manejarIngreso = () => {
-    // Lógica de autenticación
-    if (correo === "qwert" && contraseña === "12345") {
-      dispatch({ type: "LOGIN", payload: { name: "Usuario" } });
+  const handleChange = (name, value) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async () => {
+    const { usuario, password } = formData;
+
+    // Buscar el usuario en la base de datos
+    const { data, error } = await supabase
+      .from("usuarios")
+      .select("correoelectronico, hash") // Selecciona los campos correoelectronico y password
+      .eq("correoelectronico", usuario)
+      .single();
+
+    if (error || !data) {
+      setMessage(
+        isEnglish
+          ? "Invalid email or password"
+          : "Correo o contraseña inválidos"
+      );
+      return;
+    }
+
+    // Comparar la contraseña directamente
+    if (password === data.hash) {
       navigation.navigate("House");
     } else {
-      alert(
+      setMessage(
         isEnglish
-          ? "Incorrect email or password"
-          : "Correo o contraseña incorrectos"
+          ? "Invalid email or password"
+          : "Correo o contraseña inválidos"
       );
     }
   };
@@ -36,24 +61,32 @@ const LoginScreen = ({ navigation }) => {
         style={styles.entrada}
         placeholder={isEnglish ? "Email" : "Correo electrónico"}
         keyboardType="email-address"
-        value={correo}
-        onChangeText={setCorreo}
+        value={formData.usuario}
+        onChangeText={(value) => handleChange("usuario", value)}
       />
       <TextInput
         style={styles.entrada}
         placeholder={isEnglish ? "Password" : "Contraseña"}
         secureTextEntry
-        value={contraseña}
-        onChangeText={setContraseña}
+        value={formData.password}
+        onChangeText={(value) => handleChange("password", value)}
       />
-      <Button
-        title={isEnglish ? "Login" : "Ingresar"}
-        onPress={manejarIngreso}
-      />
+      <Button title={isEnglish ? "Login" : "Ingresar"} onPress={handleSubmit} />
       <Button
         title={isEnglish ? "Register" : "Registrarse"}
         onPress={() => navigation.navigate("Register")}
       />
+      {message && (
+        <Text
+          style={{
+            color: isDarkMode ? "#fff" : "#000",
+            marginTop: 20,
+            textAlign: "center",
+          }}
+        >
+          {message}
+        </Text>
+      )}
     </View>
   );
 };
