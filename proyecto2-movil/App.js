@@ -1,15 +1,18 @@
 import React, { useReducer } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { StatusBar } from "react-native"; // Opcional: Control del color de la barra de estado
+import { StatusBar } from "react-native";
 import LoginScreen from "./Screens/LoginScreen";
 import HouseScreen from "./Screens/HouseScreen";
-import RegisterScreen from "./Screens/RegisterScreen"; // Importa la pantalla de registro
-import Configuracion from "./Screens/Configuracion"; // Importa la pantalla de configuración
-import PlatosContinuados from "./Screens/PlatosContinuados"; // Importa la pantalla de platos continuados
-import Cuenta from "./Screens/Cuenta"; // Importa la pantalla de cuenta
-import Restaurants from "./Screens/Restaurants"; // Importa la pantalla de restaurantes
-import { AppContext, initialState, reducer } from "./Context/AppContext"; // Importa el AppContext
+import RegisterScreen from "./Screens/RegisterScreen";
+import Configuracion from "./Screens/Configuracion";
+import PlatosContinuados from "./Screens/PlatosContinuados";
+import Cuenta from "./Screens/Cuenta";
+import Restaurants from "./Screens/Restaurants";
+import RestaurantDetails from "./Screens/RestaurantDetails";
+import RealizarPedido from "./Screens/RealizarPedido";
+import OrderSummary from "./Screens/OrderSummary";
+import { AppContext, initialState, reducer } from "./Context/AppContext";
 
 const Stack = createStackNavigator();
 
@@ -19,56 +22,68 @@ export default function App() {
   return (
     <AppContext.Provider value={{ state, dispatch }}>
       <NavigationContainer>
-        {/* Barra de estado (opcional, puedes personalizar colores o estilos) */}
         <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
-
-        {/* Navegador principal */}
         <Stack.Navigator
-          initialRouteName="Login" // Ruta inicial, puede cambiar según el flujo
+          initialRouteName="Login"
           screenOptions={{
             headerStyle: {
-              backgroundColor: "#4CAF50", // Cambiar el color del encabezado
+              backgroundColor: "#4CAF50",
             },
-            headerTintColor: "#fff", // Color del texto en el encabezado
+            headerTintColor: "#fff",
             headerTitleStyle: {
-              fontWeight: "bold", // Estilo de fuente
+              fontWeight: "bold",
             },
           }}
         >
           <Stack.Screen
             name="Login"
             component={LoginScreen}
-            options={{ title: "Inicio de Sesión" }} // Opcional: Título personalizado
+            options={{ title: "Inicio de Sesión" }}
           />
           <Stack.Screen
             name="House"
             component={HouseScreen}
-            options={{ title: "Inicio" }} // Opcional: Título personalizado
+            options={{ title: "Inicio" }}
           />
           <Stack.Screen
             name="Register"
             component={RegisterScreen}
-            options={{ title: "Registro" }} // Opcional: Título personalizado
+            options={{ title: "Registro" }}
           />
           <Stack.Screen
             name="Configuracion"
             component={Configuracion}
-            options={{ title: "Configuración" }} // Opcional: Título personalizado
+            options={{ title: "Configuración" }}
           />
           <Stack.Screen
             name="Restaurants"
             component={Restaurants}
-            options={{ title: "Restaurantes" }} // Opcional: Título personalizado
+            options={{ title: "Restaurantes" }}
           />
           <Stack.Screen
             name="PlatosContinuados"
             component={PlatosContinuados}
-            options={{ title: "Platos Continuados" }} // Opcional: Título personalizado
+            options={{ title: "Platos Continuados" }}
           />
           <Stack.Screen
             name="Cuenta"
             component={Cuenta}
-            options={{ title: "Cuenta" }} // Opcional: Título personalizado
+            options={{ title: "Cuenta" }}
+          />
+          <Stack.Screen
+            name="RestaurantDetails"
+            component={RestaurantDetails}
+            options={{ title: "Detalles del Restaurante" }}
+          />
+          <Stack.Screen
+            name="RealizarPedido"
+            component={RealizarPedido}
+            options={{ title: "Realizar Pedido" }}
+          />
+          <Stack.Screen
+            name="OrderSummary"
+            component={OrderSummary}
+            options={{ title: "Resumen del Pedido" }}
           />
         </Stack.Navigator>
       </NavigationContainer>
