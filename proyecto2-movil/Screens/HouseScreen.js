@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { View, Text, StyleSheet, Button, ScrollView } from "react-native";
-import { AppContext } from "../Context/AppContext"; // Importa el AppContext
+import { AppContext } from "../Context/AppContext";
 
 const HouseScreen = ({ navigation }) => {
-  const { state } = useContext(AppContext); // Usa el contexto
+  const { state } = useContext(AppContext);
   const { user, isAuthenticated, isDarkMode, isEnglish } = state;
 
   return (
@@ -31,8 +31,8 @@ const HouseScreen = ({ navigation }) => {
           onPress={() => navigation.navigate("Configuracion")}
         />
         <Button
-          title={isEnglish ? "Map" : "Mapa"}
-          onPress={() => navigation.navigate("Mapa")}
+          title={isEnglish ? "Restaurants" : "Restaurantes"}
+          onPress={() => navigation.navigate("Restaurants")}
         />
         <Button
           title={isEnglish ? "Continued Dishes" : "Platos Continuados"}

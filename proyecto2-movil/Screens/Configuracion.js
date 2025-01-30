@@ -1,31 +1,35 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
+import { AppContext } from "../Context/AppContext";
 
 const Configuracion = () => {
-  const [theme, setTheme] = useState("light"); // 'light' or 'dark'
-  const [language, setLanguage] = useState("en"); // 'en' or 'es'
+  const { state, dispatch } = useContext(AppContext);
+  const { isDarkMode, isEnglish } = state;
 
   const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+    dispatch({ type: "TOGGLE_DARK_MODE" });
   };
 
   const toggleLanguage = () => {
-    setLanguage((prevLanguage) => (prevLanguage === "en" ? "es" : "en"));
+    dispatch({ type: "TOGGLE_LANGUAGE" });
   };
 
   return (
     <View
-      style={theme === "light" ? styles.lightContainer : styles.darkContainer}
+      style={[
+        styles.container,
+        { backgroundColor: isDarkMode ? "#333" : "#fff" },
+      ]}
     >
-      <Text style={styles.title}>
-        {language === "en" ? "Settings" : "Configuración"}
+      <Text style={[styles.title, { color: isDarkMode ? "#fff" : "#000" }]}>
+        {isEnglish ? "Settings" : "Configuración"}
       </Text>
       <Button
-        title={language === "en" ? "Change Theme" : "Cambiar Tema"}
+        title={isEnglish ? "Change Theme" : "Cambiar Tema"}
         onPress={toggleTheme}
       />
       <Button
-        title={language === "en" ? "Change Language" : "Cambiar Idioma"}
+        title={isEnglish ? "Change Language" : "Cambiar Idioma"}
         onPress={toggleLanguage}
       />
     </View>
@@ -33,31 +37,16 @@ const Configuracion = () => {
 };
 
 const styles = StyleSheet.create({
-  lightContainer: {
+  container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  darkContainer: {
-    flex: 1,
-    backgroundColor: "#333",
     alignItems: "center",
     justifyContent: "center",
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#f1593e",
     margin: 20,
     textAlign: "center",
-  },
-  setting: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "80%",
-    marginVertical: 10,
   },
 });
 
