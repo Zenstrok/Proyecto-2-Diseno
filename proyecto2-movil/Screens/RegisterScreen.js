@@ -10,11 +10,9 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { AppContext } from "../Context/AppContext";
-import { newHashPassword } from "../services/hashUtils";
 import { insertData, supabase } from "../services/supabase";
 
 const RegisterScreen = ({ navigation }) => {
-  var bcrypt = require("bcryptjs");
   const { state } = useContext(AppContext);
   const { isDarkMode, isEnglish } = state;
   const [formData, setFormData] = useState({
