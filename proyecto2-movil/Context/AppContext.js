@@ -3,16 +3,16 @@ import React, { createContext, useState } from "react";
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const [cocina, setCocina] = useState(null);
-  const [idioma, setIdioma] = useState(null);
-  const [tema, setTema] = useState(null);
-  const [texto, setTexto] = useState(null);
+  const [usuario, setUsuario] = useState();
+  const [idioma, setIdioma] = useState("es");
+  const [tema, setTema] = useState("light");
+  const [texto, setTexto] = useState("md");
 
   return (
     <AppContext.Provider
       value={{
-        cocina,
-        setCocina,
+        usuario,
+        setUsuario,
         idioma,
         setIdioma,
         tema,
