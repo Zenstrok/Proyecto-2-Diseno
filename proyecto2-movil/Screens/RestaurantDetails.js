@@ -14,7 +14,6 @@ const RestaurantDetails = ({ route, navigation }) => {
         title="Realizar Pedido"
         onPress={() =>
           navigation.navigate("RealizarPedido", {
-            restaurant,
             dishName: "Nombre del Plato", // Asegúrate de pasar el nombre del plato
             basePrice: 10, // Asegúrate de pasar el precio base
             baseIngredients: ["Ingrediente 1", "Ingrediente 2"], // Asegúrate de pasar los ingredientes base
