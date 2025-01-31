@@ -11,7 +11,7 @@ import CheckBox from "@react-native-community/checkbox";
 import { AppContext } from "../Context/AppContext";
 
 const RealizarPedido = ({ route, navigation }) => {
-  const { dishName, basePrice, baseIngredients } = route.params;
+  /* const { dishName, basePrice, baseIngredients } = route.params;
   const { state } = useContext(AppContext);
   const { isDarkMode, isEnglish } = state;
 
@@ -172,6 +172,11 @@ const RealizarPedido = ({ route, navigation }) => {
         onPress={handleConfirmOrder}
       />
     </ScrollView>
+  ); */
+  return (
+    <View style={styles.main}>
+      <Text>Hola</Text>
+    </View>
   );
 };
 

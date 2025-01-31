@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { newHashPassword } from "/src/services/hashUtils";
 import { insertData, supabase } from "/src/services/supabase";
+import { useNavigate } from "react-router-dom";
 
 function Registro() {
   const [formData, setFormData] = useState({
     nombre: "",
-    apellido1: "",
-    apellido2: "",
-    telefono: "",
-    correoelectronico: "",
     provincia: "",
     canton: "",
     distrito: "",
     direccion: "",
+    telefono: "",
+    tiempoentrega: "",
+    horaapertura: "",
+    horacierre: "",
     password: "",
   });
 
+  const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [provincias, setProvincias] = useState([]);
   const [cantones, setCantones] = useState([]);
@@ -94,54 +96,56 @@ function Registro() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const {
-      password,
       nombre,
-      apellido1,
-      apellido2,
-      telefono,
-      correoelectronico,
       provincia,
       canton,
       distrito,
       direccion,
+      telefono,
+      tiempoentrega,
+      horaapertura,
+      horacierre,
+      password,
     } = formData;
     const { salt, hash } = await newHashPassword(password);
     const newUser = {
       nombre,
-      apellido1,
-      apellido2,
-      telefono: parseInt(telefono, 10),
-      correoelectronico,
       idprovincia: parseInt(provincia, 10),
       idcanton: parseInt(canton, 10),
       iddistrito: parseInt(distrito, 10),
       direccionexacta: direccion,
+      telefono: parseInt(telefono, 10),
+      tiempoentrega,
+      horaapertura,
+      horacierre,
+      estado: false,
+      salt: salt || "",
+      hash: hash,
       idtema: 1,
       ididioma: 1,
       idtexto: 1,
-      salt: salt || "",
-      hash: hash,
     };
 
     // Insertar en la base de datos
     console.log(newUser);
-    const result = await insertData("usuarios", newUser);
+    const result = await insertData("cocinas", newUser);
     if (result) {
-      setMessage("Usuario registrado con éxito.");
+      setMessage("Cocina registrado con éxito.");
       setFormData({
         nombre: "",
-        apellido1: "",
-        apellido2: "",
-        telefono: "",
-        correoelectronico: "",
         provincia: "",
         canton: "",
         distrito: "",
         direccion: "",
+        telefono: "",
+        tiempoentrega: "",
+        horaapertura: "",
+        horacierre: "",
         password: "",
       });
+      navigate("/login");
     } else {
-      setMessage("Error al registrar el usuario.");
+      setMessage("Error al registrar la cocina.");
     }
   };
 
@@ -152,36 +156,8 @@ function Registro() {
         <input
           type="text"
           name="nombre"
-          placeholder="Nombre"
+          placeholder="Nombre de la Cocina"
           value={formData.nombre}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="apellido1"
-          placeholder="Primer Apellido"
-          value={formData.apellido1}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="apellido2"
-          placeholder="Segundo Apellido"
-          value={formData.apellido2}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="telefono"
-          placeholder="Teléfono"
-          value={formData.telefono}
-          onChange={handleChange}
-        />
-        <input
-          type="email"
-          name="correoelectronico"
-          placeholder="Correo Electrónico"
-          value={formData.correoelectronico}
           onChange={handleChange}
         />
         <select
@@ -227,6 +203,34 @@ function Registro() {
           name="direccion"
           placeholder="Dirección"
           value={formData.direccion}
+          onChange={handleChange}
+        />
+        <input
+          type="tel"
+          name="telefono"
+          placeholder="Teléfono"
+          value={formData.telefono}
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          name="tiempoentrega"
+          placeholder="Tiempo de Entrega (Mins)"
+          value={formData.tiempoentrega}
+          onChange={handleChange}
+        />
+        <input
+          type="time"
+          name="horaapertura"
+          placeholder="Hora de apertura"
+          value={formData.horaapertura}
+          onChange={handleChange}
+        />
+        <input
+          type="time"
+          name="horacierre"
+          placeholder="Hora de cierre"
+          value={formData.horacierre}
           onChange={handleChange}
         />
         <input

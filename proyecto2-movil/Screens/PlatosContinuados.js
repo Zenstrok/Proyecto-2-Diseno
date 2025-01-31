@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { AppContext } from "../Context/AppContext";
 
 export default function PlatosContinuados() {
-  const { state } = useContext(AppContext);
+  /* const { state } = useContext(AppContext);
   const { isDarkMode, isEnglish } = state;
 
   const styles = StyleSheet.create({
@@ -29,6 +29,11 @@ export default function PlatosContinuados() {
           ? "Continued Dishes Functionality"
           : "Funcionalidad de Platos Continuados"}
       </Text>
+    </View>
+  ); */
+  return (
+    <View style={styles.main}>
+      <Text>Hola</Text>
     </View>
   );
 }

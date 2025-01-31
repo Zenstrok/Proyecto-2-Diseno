@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 
 const OrderSummary = ({ route, navigation }) => {
-  const { customOrder } = route.params;
+  /* const { customOrder } = route.params;
 
   return (
     <View style={styles.container}>
@@ -48,6 +48,11 @@ const OrderSummary = ({ route, navigation }) => {
         onPress={() => navigation.navigate("Home")}
       />
       <Button title="Editar Pedido" onPress={() => navigation.goBack()} />
+    </View>
+  ); */
+  return (
+    <View style={styles.main}>
+      <Text>Hola</Text>
     </View>
   );
 };

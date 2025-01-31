@@ -1,6 +1,5 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  View,
   Text,
   TextInput,
   Button,
@@ -9,12 +8,9 @@ import {
   Alert,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { AppContext } from "../Context/AppContext";
 import { insertData, supabase } from "../services/supabase";
 
 const RegisterScreen = ({ navigation }) => {
-  const { state } = useContext(AppContext);
-  const { isDarkMode, isEnglish } = state;
   const [formData, setFormData] = useState({
     nombre: "",
     apellido1: "",
@@ -139,12 +135,8 @@ const RegisterScreen = ({ navigation }) => {
 
     const result = await insertData("usuarios", newUser);
     if (result) {
-      Alert.alert(isEnglish ? "Registration successful" : "Registro exitoso");
-      setMessage(
-        isEnglish
-          ? "User registered successfully."
-          : "Usuario registrado con éxito."
-      );
+      Alert.alert("Registro exitoso");
+      setMessage("Usuario registrado con éxito.");
       setFormData({
         nombre: "",
         apellido1: "",
@@ -159,51 +151,42 @@ const RegisterScreen = ({ navigation }) => {
       });
       navigation.navigate("Login");
     } else {
-      Alert.alert(isEnglish ? "Registration failed" : "Registro fallido");
-      setMessage(
-        isEnglish ? "Error registering user." : "Error al registrar el usuario."
-      );
+      Alert.alert("Registro fallido");
+      setMessage("Error al registrar el usuario.");
     }
   };
 
   return (
-    <ScrollView
-      style={[
-        styles.contenedor,
-        { backgroundColor: isDarkMode ? "#333" : "#ffffff" },
-      ]}
-    >
-      <Text style={[styles.titulo, { color: isDarkMode ? "#fff" : "#000" }]}>
-        {isEnglish ? "Register" : "Registro"}
-      </Text>
+    <ScrollView style={[styles.contenedor, { backgroundColor: "#ffffff" }]}>
+      <Text style={[styles.titulo, { color: "#000" }]}>{"Registro"}</Text>
       <TextInput
         style={styles.entrada}
-        placeholder={isEnglish ? "First name" : "Nombre"}
+        placeholder={"Nombre"}
         value={formData.nombre}
         onChangeText={(value) => handleChange("nombre", value)}
       />
       <TextInput
         style={styles.entrada}
-        placeholder={isEnglish ? "First surname" : "Primer apellido"}
+        placeholder={"Primer apellido"}
         value={formData.apellido1}
         onChangeText={(value) => handleChange("apellido1", value)}
       />
       <TextInput
         style={styles.entrada}
-        placeholder={isEnglish ? "Second surname" : "Segundo apellido"}
+        placeholder={"Segundo apellido"}
         value={formData.apellido2}
         onChangeText={(value) => handleChange("apellido2", value)}
       />
       <TextInput
         style={styles.entrada}
-        placeholder={isEnglish ? "Phone number" : "Número de teléfono"}
+        placeholder={"Número de teléfono"}
         keyboardType="phone-pad"
         value={formData.telefono}
         onChangeText={(value) => handleChange("telefono", value)}
       />
       <TextInput
         style={styles.entrada}
-        placeholder={isEnglish ? "Email" : "Correo electrónico"}
+        placeholder={"Correo electrónico"}
         keyboardType="email-address"
         value={formData.correoelectronico}
         onChangeText={(value) => handleChange("correoelectronico", value)}
@@ -213,10 +196,7 @@ const RegisterScreen = ({ navigation }) => {
         style={styles.entrada}
         onValueChange={(value) => handleChange("provincia", value)}
       >
-        <Picker.Item
-          label={isEnglish ? "Select a province" : "Seleccione una provincia"}
-          value=""
-        />
+        <Picker.Item label={"Seleccione una provincia"} value="" />
         {provincias.map((provincia) => (
           <Picker.Item
             key={provincia.id}
@@ -231,10 +211,7 @@ const RegisterScreen = ({ navigation }) => {
         onValueChange={(value) => handleChange("canton", value)}
         enabled={!!formData.provincia}
       >
-        <Picker.Item
-          label={isEnglish ? "Select a canton" : "Seleccione un cantón"}
-          value=""
-        />
+        <Picker.Item label={"Seleccione un cantón"} value="" />
         {cantones.map((canton) => (
           <Picker.Item
             key={canton.id}
@@ -249,10 +226,7 @@ const RegisterScreen = ({ navigation }) => {
         onValueChange={(value) => handleChange("distrito", value)}
         enabled={!!formData.canton}
       >
-        <Picker.Item
-          label={isEnglish ? "Select a district" : "Seleccione un distrito"}
-          value=""
-        />
+        <Picker.Item label={"Seleccione un distrito"} value="" />
         {distritos.map((distrito) => (
           <Picker.Item
             key={distrito.id}
@@ -263,25 +237,22 @@ const RegisterScreen = ({ navigation }) => {
       </Picker>
       <TextInput
         style={styles.entrada}
-        placeholder={isEnglish ? "Address" : "Dirección"}
+        placeholder={"Dirección"}
         value={formData.direccion}
         onChangeText={(value) => handleChange("direccion", value)}
       />
       <TextInput
         style={styles.entrada}
-        placeholder={isEnglish ? "Password" : "Contraseña"}
+        placeholder={"Contraseña"}
         secureTextEntry
         value={formData.password}
         onChangeText={(value) => handleChange("password", value)}
       />
-      <Button
-        title={isEnglish ? "Register" : "Registrarse"}
-        onPress={manejarRegistro}
-      />
+      <Button title={"Registrarse"} onPress={manejarRegistro} />
       {message && (
         <Text
           style={{
-            color: isDarkMode ? "#fff" : "#000",
+            color: "#000",
             marginTop: 20,
             textAlign: "center",
           }}

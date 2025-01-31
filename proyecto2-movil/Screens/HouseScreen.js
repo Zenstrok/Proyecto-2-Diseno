@@ -3,61 +3,42 @@ import { View, Text, StyleSheet, Button, ScrollView } from "react-native";
 import { AppContext } from "../Context/AppContext";
 
 const HouseScreen = ({ navigation }) => {
-  const { state } = useContext(AppContext);
-  const { user, isAuthenticated, isDarkMode, isEnglish } = state;
+  const { usuario } = useContext(AppContext);
+  console.log(usuario);
 
   return (
     <ScrollView
-      contentContainerStyle={[
-        styles.container,
-        { backgroundColor: isDarkMode ? "#333" : "#ffffff" },
-      ]}
+      contentContainerStyle={[styles.container, { backgroundColor: "#ffffff" }]}
     >
-      <Text
-        style={[styles.headerText, { color: isDarkMode ? "#fff" : "#000" }]}
-      >
-        {isAuthenticated
-          ? isEnglish
-            ? `Welcome, ${user.name}`
-            : `Bienvenido, ${user.name}`
-          : isEnglish
-          ? "Welcome Home"
-          : "Bienvenido a Inicio"}
+      <Text style={[styles.headerText, { color: "#000" }]}>
+        {`Bienvenido, ${usuario.nombre}`}
       </Text>
 
       <View style={styles.navigationButtons}>
         <Button
-          title={isEnglish ? "Settings" : "Configuración"}
+          title={"Configuración"}
           onPress={() => navigation.navigate("Configuracion")}
         />
         <Button
-          title={isEnglish ? "Restaurants" : "Restaurantes"}
+          title={"Restaurantes"}
           onPress={() => navigation.navigate("Restaurants")}
         />
         <Button
-          title={isEnglish ? "Continued Dishes" : "Platos Continuados"}
+          title={"Platos Continuados"}
           onPress={() => navigation.navigate("PlatosContinuados")}
         />
         <Button
-          title={isEnglish ? "Account" : "Cuenta"}
+          title={"Cuenta"}
           onPress={() => navigation.navigate("Cuenta")}
         />
       </View>
 
       <View style={styles.foodTypes}>
-        <Text style={styles.foodTypeText}>
-          {isEnglish ? "Vegan" : "Vegana"}
-        </Text>
-        <Text style={styles.foodTypeText}>
-          {isEnglish ? "Vegetarian" : "Vegetariana"}
-        </Text>
-        <Text style={styles.foodTypeText}>{isEnglish ? "Meat" : "Carnes"}</Text>
-        <Text style={styles.foodTypeText}>
-          {isEnglish ? "Seafood" : "Mariscos"}
-        </Text>
-        <Text style={styles.foodTypeText}>
-          {isEnglish ? "Desserts" : "Postres"}
-        </Text>
+        <Text style={styles.foodTypeText}>{"Vegana"}</Text>
+        <Text style={styles.foodTypeText}>{"Vegetariana"}</Text>
+        <Text style={styles.foodTypeText}>{"Carnes"}</Text>
+        <Text style={styles.foodTypeText}>{"Mariscos"}</Text>
+        <Text style={styles.foodTypeText}>{"Postres"}</Text>
       </View>
     </ScrollView>
   );

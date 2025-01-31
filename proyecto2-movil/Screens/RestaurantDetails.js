@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 
 const RestaurantDetails = ({ route, navigation }) => {
-  const { restaurant } = route.params;
+  /* const { restaurant } = route.params;
 
   return (
     <View style={styles.container}>
@@ -20,6 +20,11 @@ const RestaurantDetails = ({ route, navigation }) => {
           })
         }
       />
+    </View>
+  ); */
+  return (
+    <View style={styles.main}>
+      <Text>Hola</Text>
     </View>
   );
 };

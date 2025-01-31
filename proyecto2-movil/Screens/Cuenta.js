@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Button, TextInput, Image } from "react-native";
 import { AppContext } from "../Context/AppContext"; // Importa el AppContext
 
 export default function Cuenta({ navigation }) {
-  const { state, dispatch } = useContext(AppContext); // Usa el contexto
+  /* const { state, dispatch } = useContext(AppContext); // Usa el contexto
   const { user, isDarkMode, isEnglish } = state;
   const [name, setName] = useState(user.name);
   const [photo, setPhoto] = useState(null);
@@ -55,6 +55,11 @@ export default function Cuenta({ navigation }) {
         title={isEnglish ? "Logout" : "Cerrar sesión"}
         onPress={handleLogout}
       />
+    </View>
+  ); */
+  return (
+    <View style={styles.main}>
+      <Text>Hola</Text>
     </View>
   );
 }

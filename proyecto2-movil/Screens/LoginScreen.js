@@ -4,8 +4,7 @@ import { AppContext } from "../Context/AppContext";
 import { supabase } from "../services/supabase";
 
 const LoginScreen = ({ navigation }) => {
-  const { state } = useContext(AppContext);
-  const { isDarkMode, isEnglish } = state;
+  const { setUsuario } = useContext(AppContext);
   const [formData, setFormData] = useState({ usuario: "", password: "" });
   const [message, setMessage] = useState("");
 
@@ -22,64 +21,52 @@ const LoginScreen = ({ navigation }) => {
     // Buscar el usuario en la base de datos
     const { data, error } = await supabase
       .from("usuarios")
-      .select("correoelectronico, hash") // Selecciona los campos correoelectronico y password
+      .select("*")
       .eq("correoelectronico", usuario)
       .single();
 
     if (error || !data) {
-      setMessage(
-        isEnglish
-          ? "Invalid email or password"
-          : "Correo o contraseña inválidos"
-      );
+      setMessage("Correo o contraseña inválidos");
       return;
     }
 
     // Comparar la contraseña directamente
     if (password === data.hash) {
+      setUsuario(data);
       navigation.navigate("House");
     } else {
-      setMessage(
-        isEnglish
-          ? "Invalid email or password"
-          : "Correo o contraseña inválidos"
-      );
+      setMessage("Correo o contraseña inválidos");
     }
   };
 
   return (
-    <View
-      style={[
-        styles.contenedor,
-        { backgroundColor: isDarkMode ? "#333" : "#ffffff" },
-      ]}
-    >
-      <Text style={[styles.titulo, { color: isDarkMode ? "#fff" : "#000" }]}>
-        {isEnglish ? "Login" : "Inicio de Sesión"}
+    <View style={[styles.contenedor, { backgroundColor: "#ffffff" }]}>
+      <Text style={[styles.titulo, { color: "#000" }]}>
+        {"Inicio de Sesión"}
       </Text>
       <TextInput
         style={styles.entrada}
-        placeholder={isEnglish ? "Email" : "Correo electrónico"}
+        placeholder={"Correo electrónico"}
         keyboardType="email-address"
         value={formData.usuario}
         onChangeText={(value) => handleChange("usuario", value)}
       />
       <TextInput
         style={styles.entrada}
-        placeholder={isEnglish ? "Password" : "Contraseña"}
+        placeholder={"Contraseña"}
         secureTextEntry
         value={formData.password}
         onChangeText={(value) => handleChange("password", value)}
       />
-      <Button title={isEnglish ? "Login" : "Ingresar"} onPress={handleSubmit} />
+      <Button title={"Ingresar"} onPress={handleSubmit} />
       <Button
-        title={isEnglish ? "Register" : "Registrarse"}
+        title={"Registrarse"}
         onPress={() => navigation.navigate("Register")}
       />
       {message && (
         <Text
           style={{
-            color: isDarkMode ? "#fff" : "#000",
+            color: "#000",
             marginTop: 20,
             textAlign: "center",
           }}

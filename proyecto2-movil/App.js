@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { StatusBar } from "react-native";
@@ -12,15 +12,13 @@ import Restaurants from "./Screens/Restaurants";
 import RestaurantDetails from "./Screens/RestaurantDetails";
 import RealizarPedido from "./Screens/RealizarPedido";
 import OrderSummary from "./Screens/OrderSummary";
-import { AppContext, initialState, reducer } from "./Context/AppContext";
+import { AppProvider } from "./Context/AppContext";
 
 const Stack = createStackNavigator();
 
 export default function App() {
-  const [state, dispatch] = useReducer(reducer, initialState);
-
   return (
-    <AppContext.Provider value={{ state, dispatch }}>
+    <AppProvider>
       <NavigationContainer>
         <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
         <Stack.Navigator
@@ -87,6 +85,6 @@ export default function App() {
           />
         </Stack.Navigator>
       </NavigationContainer>
-    </AppContext.Provider>
+    </AppProvider>
   );
 }

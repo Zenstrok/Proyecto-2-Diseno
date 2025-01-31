@@ -3,22 +3,22 @@ import React, { createContext, useState } from "react";
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const [idioma, setIdioma] = useState("es");
-  const [tema, setTema] = useState("claro");
-  const [texto, setTexto] = useState("mediano");
-  const [user, setUser] = useState(null);
+  /* const [idioma, setIdioma] = useState(null);
+  const [tema, setTema] = useState(null);
+  const [texto, setTexto] = useState(null); */
+  const [cocina, setCocina] = useState(null);
 
   return (
     <AppContext.Provider
       value={{
-        idioma,
+        /* idioma,
         setIdioma,
         tema,
         setTema,
         texto,
-        setTexto,
-        user,
-        setUser,
+        setTexto, */
+        cocina,
+        setCocina,
       }}
     >
       {children}

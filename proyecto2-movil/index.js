@@ -1,6 +1,7 @@
+import React from "react";
 import { registerRootComponent } from "expo";
 import App from "./App";
-import { AppProvider } from "./Context/AppContext"; // Importa el AppProvider
+import { AppProvider } from "./Context/AppContext";
 
 const Root = () => (
   <AppProvider>

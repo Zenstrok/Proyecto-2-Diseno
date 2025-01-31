@@ -11,7 +11,7 @@ import { AppContext } from "../Context/AppContext";
 
 export default function Restaurants({ navigation }) {
   // Añade navigation como prop
-  const { state } = useContext(AppContext);
+  /* const { state } = useContext(AppContext);
   const { isDarkMode, isEnglish } = state;
 
   const [restaurants, setRestaurants] = useState([]);
@@ -192,6 +192,11 @@ export default function Restaurants({ navigation }) {
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.listContainer}
       />
+    </View>
+  ); */
+  return (
+    <View style={styles.main}>
+      <Text>Hola</Text>
     </View>
   );
 }

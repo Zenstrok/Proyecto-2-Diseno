@@ -3,7 +3,7 @@ import { View, Text, Button, StyleSheet } from "react-native";
 import { AppContext } from "../Context/AppContext";
 
 const Configuracion = () => {
-  const { state, dispatch } = useContext(AppContext);
+  /* const { state, dispatch } = useContext(AppContext);
   const { isDarkMode, isEnglish } = state;
 
   const toggleTheme = () => {
@@ -32,6 +32,11 @@ const Configuracion = () => {
         title={isEnglish ? "Change Language" : "Cambiar Idioma"}
         onPress={toggleLanguage}
       />
+    </View>
+  ); */
+  return (
+    <View style={styles.main}>
+      <Text>Hola</Text>
     </View>
   );
 };
