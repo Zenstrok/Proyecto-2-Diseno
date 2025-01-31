@@ -10,10 +10,7 @@ import {
 import { AppContext } from "../Context/AppContext";
 
 export default function Restaurants({ navigation }) {
-  // Añade navigation como prop
-  /* const { state } = useContext(AppContext);
-  const { isDarkMode, isEnglish } = state;
-
+  const { idioma, tema, texto } = useContext(AppContext);
   const [restaurants, setRestaurants] = useState([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [selectedCuisines, setSelectedCuisines] = useState([]);
@@ -21,39 +18,48 @@ export default function Restaurants({ navigation }) {
   const mockRestaurants = [
     {
       id: 1,
-      name: "La Pizzeria",
-      location: "San José, Escazú",
-      cuisine: ["Italiana", "Pizza"],
+      name: "El Marisquero",
+      location: "Calle del Mar, 123",
+      cuisine: ["Mariscos", "Pescatariana"],
       status: "Abierto",
-      deliveryTime: "20-30 min",
+      deliveryTime: "30 min",
       compatibility: 85,
-      description: "Delicious Italian pizza with fresh ingredients.",
-      address: "123 Pizza St, San José, Escazú",
-      phone: "123-456-7890",
     },
     {
       id: 2,
-      name: "Sushi Palace",
-      location: "San José, Santa Ana",
-      cuisine: ["Japonesa", "Sushi"],
+      name: "La Carnicería",
+      location: "Avenida de la Carne, 456",
+      cuisine: ["Carnes", "Keto", "Paleo"],
       status: "Cerrado",
-      deliveryTime: "40-50 min",
-      compatibility: 60,
-      description: "Authentic Japanese sushi with a modern twist.",
-      address: "456 Sushi Ave, San José, Santa Ana",
-      phone: "098-765-4321",
+      deliveryTime: "45 min",
+      compatibility: 70,
     },
     {
       id: 3,
-      name: "Green Bites",
-      location: "Heredia, Heredia Centro",
-      cuisine: ["Vegana", "Vegetariana"],
+      name: "Verde Vida",
+      location: "Plaza Verde, 789",
+      cuisine: ["Vegetariana", "Vegana", "Sin gluten", "Sin lactosa"],
       status: "Abierto",
-      deliveryTime: "15-25 min",
-      compatibility: 95,
-      description: "Healthy vegan and vegetarian meals.",
-      address: "789 Green Rd, Heredia, Heredia Centro",
-      phone: "555-555-5555",
+      deliveryTime: "25 min",
+      compatibility: 90,
+    },
+    {
+      id: 4,
+      name: "Low Carb Delight",
+      location: "Calle Baja, 101",
+      cuisine: ["Low Carb", "Keto"],
+      status: "Abierto",
+      deliveryTime: "35 min",
+      compatibility: 80,
+    },
+    {
+      id: 5,
+      name: "Paleo Place",
+      location: "Avenida Natural, 202",
+      cuisine: ["Paleo", "Sin gluten"],
+      status: "Cerrado",
+      deliveryTime: "50 min",
+      compatibility: 65,
     },
   ];
 
@@ -91,41 +97,74 @@ export default function Restaurants({ navigation }) {
     <TouchableOpacity
       onPress={() =>
         navigation.navigate("RestaurantDetails", { restaurant: item })
-      } // Navega a RestaurantDetails
+      }
     >
       <View
-        style={[styles.card, { backgroundColor: isDarkMode ? "#444" : "#fff" }]}
+        style={[
+          styles.card,
+          { backgroundColor: tema === "dark" ? "#444" : "#fff" },
+        ]}
       >
         <Text
           style={[
             styles.restaurantName,
-            { color: isDarkMode ? "#fff" : "#000" },
+            {
+              color: tema === "dark" ? "#fff" : "#000",
+              fontSize: texto === "sm" ? 16 : texto === "md" ? 18 : 20,
+            },
           ]}
         >
           {item.name}
         </Text>
-        <Text style={{ color: isDarkMode ? "#ccc" : "#666" }}>
+        <Text
+          style={{
+            color: tema === "dark" ? "#ccc" : "#666",
+            fontSize: texto === "sm" ? 12 : texto === "md" ? 14 : 16,
+          }}
+        >
           {item.location}
         </Text>
-        <Text style={{ color: isDarkMode ? "#ccc" : "#666" }}>
+        <Text
+          style={{
+            color: tema === "dark" ? "#ccc" : "#666",
+            fontSize: texto === "sm" ? 12 : texto === "md" ? 14 : 16,
+          }}
+        >
           {item.cuisine.join(", ")}
         </Text>
         <View style={styles.statusContainer}>
-          <Text style={{ color: item.status === "Abierto" ? "green" : "red" }}>
+          <Text
+            style={{
+              color: item.status === "Abierto" ? "green" : "red",
+              fontSize: texto === "sm" ? 12 : texto === "md" ? 14 : 16,
+            }}
+          >
             {item.status}
           </Text>
-          <Text style={{ color: isDarkMode ? "#ccc" : "#666" }}>
-            Tiempo de entrega: {item.deliveryTime}
+          <Text
+            style={{
+              color: tema === "dark" ? "#ccc" : "#666",
+              fontSize: texto === "sm" ? 12 : texto === "md" ? 14 : 16,
+            }}
+          >
+            {idioma === "es" ? "Tiempo de entrega" : "Delivery time"}:{" "}
+            {item.deliveryTime}
           </Text>
         </View>
         <View style={styles.compatibilityContainer}>
-          <Text style={{ color: isDarkMode ? "#ccc" : "#666" }}>
-            Compatibilidad:
+          <Text
+            style={{
+              color: tema === "dark" ? "#ccc" : "#666",
+              fontSize: texto === "sm" ? 12 : texto === "md" ? 14 : 16,
+            }}
+          >
+            {idioma === "es" ? "Compatibilidad" : "Compatibility"}:
           </Text>
           <Text
             style={{
               color: getCompatibilityColor(item.compatibility),
               fontWeight: "bold",
+              fontSize: texto === "sm" ? 12 : texto === "md" ? 14 : 16,
             }}
           >
             {item.compatibility}%
@@ -139,23 +178,33 @@ export default function Restaurants({ navigation }) {
     <View
       style={[
         styles.main,
-        { backgroundColor: isDarkMode ? "#333" : "#f9f9f9" },
+        { backgroundColor: tema === "dark" ? "#333" : "#f9f9f9" },
       ]}
     >
       <Text
-        style={[styles.headerText, { color: isDarkMode ? "#fff" : "#f1593e" }]}
+        style={[
+          styles.headerText,
+          {
+            color: tema === "dark" ? "#fff" : "#f1593e",
+            fontSize: texto === "sm" ? 20 : texto === "md" ? 24 : 28,
+          },
+        ]}
       >
-        {isEnglish ? "Restaurants" : "Restaurantes"}
+        {idioma === "es" ? "Restaurantes" : "Restaurants"}
       </Text>
 
       <ScrollView horizontal style={styles.filtersContainer}>
         {[
-          "Vegana",
+          "Mariscos",
+          "Carnes",
           "Vegetariana",
-          "Italiana",
-          "Japonesa",
-          "Pizza",
-          "Sushi",
+          "Vegana",
+          "Sin gluten",
+          "Sin lactosa",
+          "Pescatariana",
+          "Keto",
+          "Paleo",
+          "Low Carb",
         ].map((cuisine) => (
           <TouchableOpacity
             key={cuisine}
@@ -164,7 +213,7 @@ export default function Restaurants({ navigation }) {
               {
                 backgroundColor: selectedCuisines.includes(cuisine)
                   ? "#f1593e"
-                  : isDarkMode
+                  : tema === "dark"
                   ? "#555"
                   : "#ddd",
               },
@@ -175,9 +224,10 @@ export default function Restaurants({ navigation }) {
               style={{
                 color: selectedCuisines.includes(cuisine)
                   ? "#fff"
-                  : isDarkMode
+                  : tema === "dark"
                   ? "#fff"
                   : "#000",
+                fontSize: texto === "sm" ? 12 : texto === "md" ? 14 : 16,
               }}
             >
               {cuisine}
@@ -193,11 +243,6 @@ export default function Restaurants({ navigation }) {
         contentContainerStyle={styles.listContainer}
       />
     </View>
-  ); */
-  return (
-    <View style={styles.main}>
-      <Text>Hola</Text>
-    </View>
   );
 }
 
@@ -207,7 +252,6 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   headerText: {
-    fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center",
@@ -234,7 +278,6 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   restaurantName: {
-    fontSize: 18,
     fontWeight: "bold",
     marginBottom: 8,
   },

@@ -1,65 +1,67 @@
 import React, { useContext, useState } from "react";
 import { View, Text, StyleSheet, Button, TextInput, Image } from "react-native";
-import { AppContext } from "../Context/AppContext"; // Importa el AppContext
+import { AppContext } from "../Context/AppContext";
 
 export default function Cuenta({ navigation }) {
-  /* const { state, dispatch } = useContext(AppContext); // Usa el contexto
-  const { user, isDarkMode, isEnglish } = state;
-  const [name, setName] = useState(user.name);
+  const { usuario, idioma, tema, texto, setUsuario } = useContext(AppContext);
+  const [name, setName] = useState(usuario?.nombre || "");
   const [photo, setPhoto] = useState(null);
 
   const handleLogout = () => {
-    dispatch({ type: "LOGOUT" });
-    alert(isEnglish ? "Logged out" : "Sesión cerrada");
+    setUsuario(null);
+    alert(idioma === "es" ? "Sesión cerrada" : "Logged out");
     navigation.navigate("Login");
   };
 
   const handleSave = () => {
-    // Lógica para guardar cambios
-    alert(isEnglish ? "Changes saved" : "Cambios guardados");
+    setUsuario({ ...usuario, nombre: name });
+    alert(idioma === "es" ? "Cambios guardados" : "Changes saved");
   };
 
   const handlePhotoChange = () => {
-    // Lógica para cambiar la foto
-    alert(isEnglish ? "Photo changed" : "Foto cambiada");
+    alert(idioma === "es" ? "Foto cambiada" : "Photo changed");
   };
 
   return (
     <View
       style={[
         styles.main,
-        { backgroundColor: isDarkMode ? "#333" : "#f9f9f9" },
+        { backgroundColor: tema === "dark" ? "#333" : "#f9f9f9" },
       ]}
     >
       <Text
-        style={[styles.headerText, { color: isDarkMode ? "#fff" : "#f1593e" }]}
+        style={[
+          styles.headerText,
+          {
+            color: tema === "dark" ? "#fff" : "#f1593e",
+            fontSize: texto === "sm" ? 20 : texto === "md" ? 24 : 28,
+          },
+        ]}
       >
-        {isEnglish ? "Account" : "Cuenta"}
+        {idioma === "es" ? "Cuenta" : "Account"}
       </Text>
       <Image source={photo} style={styles.photo} />
       <Button
-        title={isEnglish ? "Change Photo" : "Cambiar Foto"}
+        title={idioma === "es" ? "Cambiar Foto" : "Change Photo"}
         onPress={handlePhotoChange}
       />
       <TextInput
-        style={styles.input}
+        style={[
+          styles.input,
+          { fontSize: texto === "sm" ? 14 : texto === "md" ? 16 : 18 },
+        ]}
         value={name}
         onChangeText={setName}
-        placeholder={isEnglish ? "Username" : "Nombre de usuario"}
+        placeholder={idioma === "es" ? "Nombre de usuario" : "Username"}
       />
       <Button
-        title={isEnglish ? "Save Changes" : "Guardar Cambios"}
+        title={idioma === "es" ? "Guardar Cambios" : "Save Changes"}
         onPress={handleSave}
       />
       <Button
-        title={isEnglish ? "Logout" : "Cerrar sesión"}
+        title={idioma === "es" ? "Cerrar sesión" : "Logout"}
         onPress={handleLogout}
       />
-    </View>
-  ); */
-  return (
-    <View style={styles.main}>
-      <Text>Hola</Text>
     </View>
   );
 }
@@ -72,7 +74,6 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   headerText: {
-    fontSize: 24,
     fontWeight: "bold",
     margin: 20,
     textAlign: "center",

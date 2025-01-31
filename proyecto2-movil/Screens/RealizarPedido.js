@@ -1,230 +1,172 @@
-import React, { useState, useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
-  TextInput,
-  Button,
   ScrollView,
   StyleSheet,
+  Button,
+  TouchableOpacity,
+  Alert,
 } from "react-native";
-import CheckBox from "@react-native-community/checkbox";
 import { AppContext } from "../Context/AppContext";
 
 const RealizarPedido = ({ route, navigation }) => {
-  /* const { dishName, basePrice, baseIngredients } = route.params;
-  const { state } = useContext(AppContext);
-  const { isDarkMode, isEnglish } = state;
+  const { idioma, tema, texto } = useContext(AppContext);
+  const { restaurant } = route.params;
+  const [selectedItems, setSelectedItems] = useState([]);
 
-  const [selectedIngredients, setSelectedIngredients] =
-    useState(baseIngredients);
-  const [extraIngredients, setExtraIngredients] = useState([]);
-  const [removedIngredients, setRemovedIngredients] = useState([]);
-  const [specialInstructions, setSpecialInstructions] = useState("");
-  const [orderType, setOrderType] = useState("inmediato");
-  const [selectedDays, setSelectedDays] = useState([]);
+  // Menú mock - En un caso real esto vendría de una API
+  const menuMock = [
+    {
+      id: 1,
+      name: "Plato 1",
+      price: 15.99,
+      description: "Descripción del plato 1",
+    },
+    {
+      id: 2,
+      name: "Plato 2",
+      price: 12.99,
+      description: "Descripción del plato 2",
+    },
+    {
+      id: 3,
+      name: "Plato 3",
+      price: 18.99,
+      description: "Descripción del plato 3",
+    },
+  ];
 
-  const handleIngredientToggle = (ingredient) => {
-    if (selectedIngredients.includes(ingredient)) {
-      setSelectedIngredients(
-        selectedIngredients.filter((item) => item !== ingredient)
+  const handleSelectItem = (item) => {
+    setSelectedItems([...selectedItems, item]);
+  };
+
+  const handlePlaceOrder = () => {
+    if (selectedItems.length === 0) {
+      Alert.alert(
+        idioma === "es" ? "Error" : "Error",
+        idioma === "es"
+          ? "Por favor selecciona al menos un plato"
+          : "Please select at least one dish"
       );
-      setRemovedIngredients([...removedIngredients, ingredient]);
-    } else {
-      setSelectedIngredients([...selectedIngredients, ingredient]);
-      setRemovedIngredients(
-        removedIngredients.filter((item) => item !== ingredient)
-      );
+      return;
     }
-  };
 
-  const handleExtraIngredients = (text) => {
-    setExtraIngredients(text.split(",").map((item) => item.trim()));
-  };
-
-  const calculateCustomPrice = () => {
-    return basePrice + extraIngredients.length * 2; // Ejemplo simple
-  };
-
-  const handleOrderTypeChange = (type) => {
-    setOrderType(type);
-  };
-
-  const handleDaySelection = (day) => {
-    if (selectedDays.includes(day)) {
-      setSelectedDays(selectedDays.filter((d) => d !== day));
-    } else {
-      setSelectedDays([...selectedDays, day]);
-    }
-  };
-
-  const handleConfirmOrder = () => {
-    const customOrder = {
-      dishName,
-      selectedIngredients,
-      extraIngredients,
-      removedIngredients,
-      specialInstructions,
-      orderType,
-      selectedDays,
-      totalPrice: calculateCustomPrice(),
+    const orderDetails = {
+      restaurant: restaurant,
+      items: selectedItems,
+      total: selectedItems.reduce((acc, item) => acc + item.price, 0),
     };
-    navigation.navigate("OrderSummary", { customOrder });
+
+    navigation.navigate("OrderSummary", orderDetails);
   };
 
-  const styles = getStyles(isDarkMode);
+  const styles = getStyles(tema, texto);
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>{dishName}</Text>
+      <Text style={styles.title}>{restaurant.name}</Text>
 
       <Text style={styles.sectionTitle}>
-        {isEnglish ? "Base Ingredients" : "Ingredientes Base"}
+        {idioma === "es" ? "Menú Disponible" : "Available Menu"}
       </Text>
-      {baseIngredients.map((ingredient, index) => (
-        <View key={index} style={styles.ingredientItem}>
-          <CheckBox
-            value={selectedIngredients.includes(ingredient)}
-            onValueChange={() => handleIngredientToggle(ingredient)}
-            tintColors={{
-              true: isDarkMode ? "#fff" : "#000",
-              false: isDarkMode ? "#fff" : "#000",
-            }}
-          />
-          <Text style={styles.text}>{ingredient}</Text>
-        </View>
+
+      {menuMock.map((item) => (
+        <TouchableOpacity
+          key={item.id}
+          style={styles.menuItem}
+          onPress={() => handleSelectItem(item)}
+        >
+          <View>
+            <Text style={styles.itemName}>{item.name}</Text>
+            <Text style={styles.itemDescription}>{item.description}</Text>
+            <Text style={styles.itemPrice}>${item.price}</Text>
+          </View>
+        </TouchableOpacity>
       ))}
 
-      <Text style={styles.sectionTitle}>
-        {isEnglish ? "Extra Ingredients" : "Ingredientes Extra"}
-      </Text>
-      <TextInput
-        style={styles.input}
-        placeholder={
-          isEnglish
-            ? "Add extra ingredients (comma separated)"
-            : "Añade ingredientes extra (separados por comas)"
-        }
-        onChangeText={handleExtraIngredients}
-        placeholderTextColor={isDarkMode ? "#aaa" : "#888"}
-      />
-
-      <Text style={styles.sectionTitle}>
-        {isEnglish ? "Special Instructions" : "Indicaciones Especiales"}
-      </Text>
-      <TextInput
-        style={styles.input}
-        placeholder={
-          isEnglish
-            ? "E.g.: No salt, extra spicy"
-            : "Ej: Sin sal, extra picante"
-        }
-        onChangeText={setSpecialInstructions}
-        placeholderTextColor={isDarkMode ? "#aaa" : "#888"}
-      />
-
-      <Text style={styles.sectionTitle}>
-        {isEnglish ? "Order Type" : "Tipo de Pedido"}
-      </Text>
-      <View style={styles.orderTypeContainer}>
-        <Button
-          title={isEnglish ? "Immediate Order" : "Pedido Inmediato"}
-          onPress={() => handleOrderTypeChange("inmediato")}
-          color={orderType === "inmediato" ? "green" : "gray"}
-        />
-        <Button
-          title={isEnglish ? "Continued Order" : "Pedido Continuado"}
-          onPress={() => handleOrderTypeChange("continuado")}
-          color={orderType === "continuado" ? "green" : "gray"}
-        />
+      <View style={styles.selectedItemsContainer}>
+        <Text style={styles.sectionTitle}>
+          {idioma === "es" ? "Items Seleccionados" : "Selected Items"}
+        </Text>
+        {selectedItems.map((item, index) => (
+          <Text key={index} style={styles.selectedItem}>
+            {item.name} - ${item.price}
+          </Text>
+        ))}
+        {selectedItems.length > 0 && (
+          <Text style={styles.total}>
+            Total: $
+            {selectedItems
+              .reduce((acc, item) => acc + item.price, 0)
+              .toFixed(2)}
+          </Text>
+        )}
       </View>
 
-      {orderType === "continuado" && (
-        <View>
-          <Text style={styles.sectionTitle}>
-            {isEnglish ? "Select Days" : "Selecciona los días"}
-          </Text>
-          {[
-            isEnglish ? "Monday" : "Lunes",
-            isEnglish ? "Tuesday" : "Martes",
-            isEnglish ? "Wednesday" : "Miércoles",
-            isEnglish ? "Thursday" : "Jueves",
-            isEnglish ? "Friday" : "Viernes",
-            isEnglish ? "Saturday" : "Sábado",
-            isEnglish ? "Sunday" : "Domingo",
-          ].map((day, index) => (
-            <View key={index} style={styles.dayItem}>
-              <CheckBox
-                value={selectedDays.includes(day)}
-                onValueChange={() => handleDaySelection(day)}
-                tintColors={{
-                  true: isDarkMode ? "#fff" : "#000",
-                  false: isDarkMode ? "#fff" : "#000",
-                }}
-              />
-              <Text style={styles.text}>{day}</Text>
-            </View>
-          ))}
-        </View>
-      )}
-
       <Button
-        title={isEnglish ? "Confirm Order" : "Confirmar Pedido"}
-        onPress={handleConfirmOrder}
+        title={idioma === "es" ? "Realizar Pedido" : "Place Order"}
+        onPress={handlePlaceOrder}
       />
     </ScrollView>
-  ); */
-  return (
-    <View style={styles.main}>
-      <Text>Hola</Text>
-    </View>
   );
 };
 
-const getStyles = (isDarkMode) =>
+const getStyles = (tema, texto) =>
   StyleSheet.create({
     container: {
       flex: 1,
       padding: 16,
-      backgroundColor: isDarkMode ? "#333" : "#fff",
+      backgroundColor: tema === "dark" ? "#333" : "#fff",
     },
     title: {
-      fontSize: 24,
+      fontSize: texto === "sm" ? 20 : texto === "md" ? 24 : 28,
       fontWeight: "bold",
       marginBottom: 16,
-      color: isDarkMode ? "#fff" : "#000",
+      color: tema === "dark" ? "#fff" : "#000",
     },
     sectionTitle: {
-      fontSize: 18,
+      fontSize: texto === "sm" ? 16 : texto === "md" ? 18 : 20,
       fontWeight: "bold",
       marginTop: 16,
       marginBottom: 8,
-      color: isDarkMode ? "#fff" : "#000",
+      color: tema === "dark" ? "#fff" : "#000",
     },
-    ingredientItem: {
-      flexDirection: "row",
-      alignItems: "center",
+    menuItem: {
+      padding: 12,
+      borderRadius: 8,
+      backgroundColor: tema === "dark" ? "#444" : "#f5f5f5",
       marginBottom: 8,
     },
-    input: {
-      borderWidth: 1,
-      borderColor: isDarkMode ? "#555" : "#ccc",
-      borderRadius: 4,
-      padding: 8,
-      marginBottom: 16,
-      color: isDarkMode ? "#fff" : "#000",
+    itemName: {
+      fontSize: texto === "sm" ? 14 : texto === "md" ? 16 : 18,
+      fontWeight: "bold",
+      color: tema === "dark" ? "#fff" : "#000",
     },
-    orderTypeContainer: {
-      flexDirection: "row",
-      justifyContent: "space-around",
-      marginBottom: 16,
+    itemDescription: {
+      fontSize: texto === "sm" ? 12 : texto === "md" ? 14 : 16,
+      color: tema === "dark" ? "#ccc" : "#666",
+      marginTop: 4,
     },
-    dayItem: {
-      flexDirection: "row",
-      alignItems: "center",
-      marginBottom: 8,
+    itemPrice: {
+      fontSize: texto === "sm" ? 14 : texto === "md" ? 16 : 18,
+      color: tema === "dark" ? "#fff" : "#000",
+      marginTop: 4,
     },
-    text: {
-      color: isDarkMode ? "#fff" : "#000",
+    selectedItemsContainer: {
+      marginTop: 20,
+      marginBottom: 20,
+    },
+    selectedItem: {
+      fontSize: texto === "sm" ? 14 : texto === "md" ? 16 : 18,
+      color: tema === "dark" ? "#fff" : "#000",
+      marginBottom: 4,
+    },
+    total: {
+      fontSize: texto === "sm" ? 16 : texto === "md" ? 18 : 20,
+      fontWeight: "bold",
+      color: tema === "dark" ? "#fff" : "#000",
+      marginTop: 8,
     },
   });
 
