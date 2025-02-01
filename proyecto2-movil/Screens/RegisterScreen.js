@@ -128,7 +128,7 @@ const RegisterScreen = ({ navigation }) => {
       direccionexacta: direccion,
       idtema: 1,
       ididioma: 1,
-      idtexto: 1,
+      idtexto: 2,
       salt: salt || "",
       hash: hash,
     };

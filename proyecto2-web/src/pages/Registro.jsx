@@ -123,7 +123,7 @@ function Registro() {
       hash: hash,
       idtema: 1,
       ididioma: 1,
-      idtexto: 1,
+      idtexto: 2,
     };
 
     // Insertar en la base de datos

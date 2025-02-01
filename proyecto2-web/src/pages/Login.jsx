@@ -5,7 +5,7 @@ import { supabase } from "/src/services/supabase";
 import { comparePassword } from "/src/services/hashUtils";
 
 function Login() {
-  const { setCocina } = useContext(AppContext);
+  const { setCocina, setIdioma, setTema, setTexto } = useContext(AppContext);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ telefono: "", password: "" });
   const [message, setMessage] = useState("");
@@ -16,6 +16,33 @@ function Login() {
       ...prevData,
       [name]: value,
     }));
+  };
+
+  const handleIdiomaContext = async (cocina) => {
+    const { data, error } = await supabase
+      .from("idiomas")
+      .select(`id, nombre, valor, cocinas (id, nombre, ididioma)`)
+      .eq("cocinas.id", cocina.id)
+      .eq("id", cocina.ididioma);
+    setIdioma(data[0].valor);
+  };
+
+  const handleTemaContext = async (cocina) => {
+    const { data, error } = await supabase
+      .from("temas")
+      .select(`id, nombre, valor, cocinas (id, nombre, idtema)`)
+      .eq("cocinas.id", cocina.id)
+      .eq("id", cocina.idtema);
+    setTema(data[0].valor);
+  };
+
+  const handleTextoContext = async (cocina) => {
+    const { data, error } = await supabase
+      .from("textos")
+      .select(`id, nombre, valor, cocinas (id, nombre, idtexto)`)
+      .eq("cocinas.id", cocina.id)
+      .eq("id", cocina.idtexto);
+    setTexto(data[0].valor);
   };
 
   const handleSubmit = async (e) => {
@@ -38,6 +65,9 @@ function Login() {
     const isValidPassword = await comparePassword(password, data.hash);
     if (isValidPassword) {
       setCocina(data);
+      await handleIdiomaContext(data);
+      await handleTemaContext(data);
+      await handleTextoContext(data);
       navigate("/inicio");
     } else {
       setMessage("Número de teléfono o contraseña inválidos");

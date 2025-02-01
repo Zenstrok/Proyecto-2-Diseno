@@ -4,9 +4,9 @@ export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const [cocina, setCocina] = useState(null);
-  const [idioma, setIdioma] = useState("es");
-  const [tema, setTema] = useState("light");
-  const [texto, setTexto] = useState("md");
+  const [idioma, setIdioma] = useState(null);
+  const [tema, setTema] = useState(null);
+  const [texto, setTexto] = useState(null);
 
   return (
     <AppContext.Provider

@@ -3,8 +3,11 @@ import "./Inicio.css";
 import { AppContext } from "/src/context/AppContext.jsx";
 
 const Inicio = () => {
-  const { cocina } = useContext(AppContext);
+  const { cocina, idioma, tema, texto } = useContext(AppContext);
   console.log(cocina);
+  console.log(idioma);
+  console.log(tema);
+  console.log(texto);
   const [darkMode, setDarkMode] = useState(false);
   const [pedidos, setPedidos] = useState([
     {
