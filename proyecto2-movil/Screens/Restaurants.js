@@ -6,68 +6,77 @@ import {
   FlatList,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import { AppContext } from "../Context/AppContext";
+import { supabase } from "../services/supabase";
 
 export default function Restaurants({ navigation }) {
   const { idioma, tema, texto } = useContext(AppContext);
   const [restaurants, setRestaurants] = useState([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [selectedCuisines, setSelectedCuisines] = useState([]);
+  const [cuisineTypes, setCuisineTypes] = useState([]); // Nuevo estado para los tipos de cocina
+  const [loading, setLoading] = useState(true);
 
-  const mockRestaurants = [
-    {
-      id: 1,
-      name: "El Marisquero",
-      location: "Calle del Mar, 123",
-      cuisine: ["Mariscos", "Pescatariana"],
-      status: "Abierto",
-      deliveryTime: "30 min",
-      compatibility: 85,
-    },
-    {
-      id: 2,
-      name: "La Carnicería",
-      location: "Avenida de la Carne, 456",
-      cuisine: ["Carnes", "Keto", "Paleo"],
-      status: "Cerrado",
-      deliveryTime: "45 min",
-      compatibility: 70,
-    },
-    {
-      id: 3,
-      name: "Verde Vida",
-      location: "Plaza Verde, 789",
-      cuisine: ["Vegetariana", "Vegana", "Sin gluten", "Sin lactosa"],
-      status: "Abierto",
-      deliveryTime: "25 min",
-      compatibility: 90,
-    },
-    {
-      id: 4,
-      name: "Low Carb Delight",
-      location: "Calle Baja, 101",
-      cuisine: ["Low Carb", "Keto"],
-      status: "Abierto",
-      deliveryTime: "35 min",
-      compatibility: 80,
-    },
-    {
-      id: 5,
-      name: "Paleo Place",
-      location: "Avenida Natural, 202",
-      cuisine: ["Paleo", "Sin gluten"],
-      status: "Cerrado",
-      deliveryTime: "50 min",
-      compatibility: 65,
-    },
-  ];
-
+  // Obtener los restaurantes y los tipos de cocina desde Supabase
   useEffect(() => {
-    setRestaurants(mockRestaurants);
-    setFilteredRestaurants(mockRestaurants);
+    const fetchData = async () => {
+      try {
+        // Obtener los tipos de cocina desde la tabla TiposCocinas
+        const { data: cuisineData, error: cuisineError } = await supabase
+          .from("tiposcocinas") // Nombre de la tabla corregido
+          .select("*");
+
+        if (cuisineError) {
+          console.error("Error fetching cuisine types:", cuisineError);
+          return;
+        }
+
+        // Guardar los nombres de los tipos de cocina
+        setCuisineTypes(cuisineData.map((cuisine) => cuisine.nombre)); // Asume que el nombre del tipo de cocina está en el campo "nombre"
+
+        // Obtener los restaurantes desde la tabla Cocinas con un JOIN a la tabla CocinaYTipo y TiposCocinas
+        const { data: restaurantData, error: restaurantError } =
+          await supabase.from("cocinas").select(`
+              id,
+              nombre,
+              direccion_exacta,
+              estado,
+              tiempo_entrega,
+              metodos_pago,
+              CocinaYTipo ( TiposCocinas ( nombre ) )
+            `);
+
+        if (restaurantError) {
+          console.error("Error fetching restaurants:", restaurantError);
+          return;
+        }
+
+        // Mapear los datos para que coincidan con la estructura esperada
+        const formattedRestaurants = restaurantData.map((restaurant) => ({
+          id: restaurant.id,
+          name: restaurant.nombre,
+          location: restaurant.direccion_exacta,
+          cuisine: restaurant.CocinaYTipo.map((tc) => tc.TiposCocinas.nombre), // Ajustado para usar TiposCocinas
+          status: restaurant.estado ? "Abierto" : "Cerrado",
+          deliveryTime: `${restaurant.tiempo_entrega} min`,
+          compatibility: Math.floor(Math.random() * 100), // Esto puede ser reemplazado por un cálculo real
+        }));
+
+        setRestaurants(formattedRestaurants);
+        setFilteredRestaurants(formattedRestaurants);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
+  // Filtrar restaurantes por tipo de cocina
   const filterByCuisine = (cuisine) => {
     if (selectedCuisines.includes(cuisine)) {
       setSelectedCuisines(selectedCuisines.filter((c) => c !== cuisine));
@@ -174,6 +183,14 @@ export default function Restaurants({ navigation }) {
     </TouchableOpacity>
   );
 
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
   return (
     <View
       style={[
@@ -194,18 +211,7 @@ export default function Restaurants({ navigation }) {
       </Text>
 
       <ScrollView horizontal style={styles.filtersContainer}>
-        {[
-          "Mariscos",
-          "Carnes",
-          "Vegetariana",
-          "Vegana",
-          "Sin gluten",
-          "Sin lactosa",
-          "Pescatariana",
-          "Keto",
-          "Paleo",
-          "Low Carb",
-        ].map((cuisine) => (
+        {cuisineTypes.map((cuisine) => (
           <TouchableOpacity
             key={cuisine}
             style={[
@@ -290,5 +296,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 8,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

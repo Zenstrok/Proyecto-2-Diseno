@@ -1,78 +1,121 @@
 import React from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  Button,
+  Alert,
+} from "react-native";
 
 const OrderSummary = ({ route, navigation }) => {
-  /* const { customOrder } = route.params;
+  const { restaurant, items, total } = route.params;
+
+  const handleConfirmOrder = () => {
+    Alert.alert(
+      "Pedido Confirmado",
+      "Tu pedido ha sido confirmado y está siendo procesado.",
+      [
+        {
+          text: "OK",
+          onPress: () => navigation.navigate("Home"), // Redirige a la pantalla principal o a donde desees
+        },
+      ]
+    );
+  };
+
+  const handleGoBackToEdit = () => {
+    // Navegar a RestaurantDetails y pasar el restaurante para poder editar el pedido
+    navigation.navigate("RestaurantDetails", { restaurant });
+  };
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 16,
+      backgroundColor: "#fff",
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: "bold",
+      marginBottom: 16,
+      color: "#000",
+    },
+    sectionTitle: {
+      fontSize: 18,
+      fontWeight: "bold",
+      marginTop: 16,
+      marginBottom: 8,
+      color: "#000",
+    },
+    itemContainer: {
+      marginBottom: 12,
+    },
+    itemName: {
+      fontSize: 16,
+      fontWeight: "bold",
+      color: "#000",
+    },
+    itemDescription: {
+      fontSize: 14,
+      color: "#666",
+      marginTop: 4,
+    },
+    itemPrice: {
+      fontSize: 16,
+      color: "#000",
+      marginTop: 4,
+    },
+    customizationText: {
+      fontSize: 14,
+      color: "#666",
+      marginBottom: 4,
+    },
+    total: {
+      fontSize: 20,
+      fontWeight: "bold",
+      color: "#000",
+      marginTop: 16,
+    },
+    buttonContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginTop: 20,
+    },
+  });
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>Resumen del Pedido</Text>
+      <Text style={styles.sectionTitle}>Restaurante: {restaurant.name}</Text>
 
-      <Text style={styles.sectionTitle}>{customOrder.dishName}</Text>
-
-      <Text style={styles.sectionTitle}>Ingredientes Seleccionados:</Text>
-      {customOrder.selectedIngredients.map((ingredient, index) => (
-        <Text key={index}>{ingredient}</Text>
-      ))}
-
-      <Text style={styles.sectionTitle}>Ingredientes Extra:</Text>
-      {customOrder.extraIngredients.map((ingredient, index) => (
-        <Text key={index}>{ingredient}</Text>
-      ))}
-
-      <Text style={styles.sectionTitle}>Ingredientes Eliminados:</Text>
-      {customOrder.removedIngredients.map((ingredient, index) => (
-        <Text key={index}>{ingredient}</Text>
-      ))}
-
-      <Text style={styles.sectionTitle}>Indicaciones Especiales:</Text>
-      <Text>{customOrder.specialInstructions}</Text>
-
-      <Text style={styles.sectionTitle}>Tipo de Pedido:</Text>
-      <Text>{customOrder.orderType}</Text>
-
-      {customOrder.orderType === "continuado" && (
-        <View>
-          <Text style={styles.sectionTitle}>Días Seleccionados:</Text>
-          {customOrder.selectedDays.map((day, index) => (
-            <Text key={index}>{day}</Text>
-          ))}
+      <Text style={styles.sectionTitle}>Items Pedidos:</Text>
+      {items.map((item, index) => (
+        <View key={index} style={styles.itemContainer}>
+          <Text style={styles.itemName}>
+            {item.name} - ${item.price}
+          </Text>
+          {item.preparation && (
+            <Text style={styles.customizationText}>
+              Preparación: {item.preparation}
+            </Text>
+          )}
+          {item.extraIngredients && (
+            <Text style={styles.customizationText}>
+              Ingredientes extra: {item.extraIngredients}
+            </Text>
+          )}
         </View>
-      )}
+      ))}
 
-      <Text style={styles.sectionTitle}>Precio Total:</Text>
-      <Text>${customOrder.totalPrice}</Text>
+      <Text style={styles.total}>Total: ${total.toFixed(2)}</Text>
 
-      <Button
-        title="Confirmar Pedido"
-        onPress={() => navigation.navigate("Home")}
-      />
-      <Button title="Editar Pedido" onPress={() => navigation.goBack()} />
-    </View>
-  ); */
-  return (
-    <View style={styles.main}>
-      <Text>Hola</Text>
-    </View>
+      <View style={styles.buttonContainer}>
+        <Button title="Volver Atrás" onPress={handleGoBackToEdit} />
+        <Button title="Confirmar Pedido" onPress={handleConfirmOrder} />
+      </View>
+    </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 16,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginTop: 16,
-    marginBottom: 8,
-  },
-});
 
 export default OrderSummary;

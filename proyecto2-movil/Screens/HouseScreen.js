@@ -1,5 +1,11 @@
 import React, { useContext } from "react";
-import { View, Text, StyleSheet, Button, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import { AppContext } from "../Context/AppContext";
 
 const HouseScreen = ({ navigation }) => {
@@ -25,80 +31,82 @@ const HouseScreen = ({ navigation }) => {
       </Text>
 
       <View style={styles.navigationButtons}>
-        <Button
-          title={idioma === "es" ? "Configuración" : "Settings"}
+        <TouchableOpacity
+          style={[
+            styles.button,
+            { backgroundColor: tema === "dark" ? "#555" : "#ddd" },
+          ]}
           onPress={() => navigation.navigate("Configuracion")}
-        />
-        <Button
-          title={idioma === "es" ? "Restaurantes" : "Restaurants"}
+        >
+          <Text
+            style={[
+              styles.buttonText,
+              {
+                color: tema === "dark" ? "#fff" : "#000",
+                fontSize: texto === "sm" ? 14 : texto === "md" ? 16 : 18,
+              },
+            ]}
+          >
+            {idioma === "es" ? "Configuración" : "Settings"}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            { backgroundColor: tema === "dark" ? "#555" : "#ddd" },
+          ]}
           onPress={() => navigation.navigate("Restaurants")}
-        />
-        <Button
-          title={idioma === "es" ? "Platos Continuados" : "Continued Dishes"}
+        >
+          <Text
+            style={[
+              styles.buttonText,
+              {
+                color: tema === "dark" ? "#fff" : "#000",
+                fontSize: texto === "sm" ? 14 : texto === "md" ? 16 : 18,
+              },
+            ]}
+          >
+            {idioma === "es" ? "Restaurantes" : "Restaurants"}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            { backgroundColor: tema === "dark" ? "#555" : "#ddd" },
+          ]}
           onPress={() => navigation.navigate("PlatosContinuados")}
-        />
-        <Button
-          title={idioma === "es" ? "Cuenta" : "Account"}
+        >
+          <Text
+            style={[
+              styles.buttonText,
+              {
+                color: tema === "dark" ? "#fff" : "#000",
+                fontSize: texto === "sm" ? 14 : texto === "md" ? 16 : 18,
+              },
+            ]}
+          >
+            {idioma === "es" ? "Platos Continuados" : "Continued Dishes"}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            { backgroundColor: tema === "dark" ? "#555" : "#ddd" },
+          ]}
           onPress={() => navigation.navigate("Cuenta")}
-        />
-      </View>
-
-      <View style={styles.foodTypes}>
-        <Text
-          style={[
-            styles.foodTypeText,
-            {
-              color: tema === "dark" ? "#fff" : "#000",
-              fontSize: texto === "sm" ? 16 : texto === "md" ? 18 : 20,
-            },
-          ]}
         >
-          {"Vegana"}
-        </Text>
-        <Text
-          style={[
-            styles.foodTypeText,
-            {
-              color: tema === "dark" ? "#fff" : "#000",
-              fontSize: texto === "sm" ? 16 : texto === "md" ? 18 : 20,
-            },
-          ]}
-        >
-          {"Vegetariana"}
-        </Text>
-        <Text
-          style={[
-            styles.foodTypeText,
-            {
-              color: tema === "dark" ? "#fff" : "#000",
-              fontSize: texto === "sm" ? 16 : texto === "md" ? 18 : 20,
-            },
-          ]}
-        >
-          {"Carnes"}
-        </Text>
-        <Text
-          style={[
-            styles.foodTypeText,
-            {
-              color: tema === "dark" ? "#fff" : "#000",
-              fontSize: texto === "sm" ? 16 : texto === "md" ? 18 : 20,
-            },
-          ]}
-        >
-          {"Mariscos"}
-        </Text>
-        <Text
-          style={[
-            styles.foodTypeText,
-            {
-              color: tema === "dark" ? "#fff" : "#000",
-              fontSize: texto === "sm" ? 16 : texto === "md" ? 18 : 20,
-            },
-          ]}
-        >
-          {"Postres"}
-        </Text>
+          <Text
+            style={[
+              styles.buttonText,
+              {
+                color: tema === "dark" ? "#fff" : "#000",
+                fontSize: texto === "sm" ? 14 : texto === "md" ? 16 : 18,
+              },
+            ]}
+          >
+            {idioma === "es" ? "Cuenta" : "Account"}
+          </Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -113,20 +121,21 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 40,
+    textAlign: "center",
   },
   navigationButtons: {
-    flexDirection: "row",
-    justifyContent: "space-around",
     width: "100%",
     marginBottom: 20,
   },
-  foodTypes: {
+  button: {
+    padding: 15,
+    borderRadius: 10,
+    marginVertical: 10,
     alignItems: "center",
   },
-  foodTypeText: {
+  buttonText: {
     fontWeight: "bold",
-    marginVertical: 10,
   },
 });
 

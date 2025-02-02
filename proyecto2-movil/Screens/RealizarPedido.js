@@ -7,6 +7,8 @@ import {
   Button,
   TouchableOpacity,
   Alert,
+  Modal,
+  TextInput,
 } from "react-native";
 import { AppContext } from "../Context/AppContext";
 
@@ -14,6 +16,10 @@ const RealizarPedido = ({ route, navigation }) => {
   const { idioma, tema, texto } = useContext(AppContext);
   const { restaurant } = route.params;
   const [selectedItems, setSelectedItems] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [preparation, setPreparation] = useState("");
+  const [extraIngredients, setExtraIngredients] = useState("");
 
   // Menú mock - En un caso real esto vendría de una API
   const menuMock = [
@@ -38,7 +44,25 @@ const RealizarPedido = ({ route, navigation }) => {
   ];
 
   const handleSelectItem = (item) => {
-    setSelectedItems([...selectedItems, item]);
+    setSelectedItem(item);
+    setModalVisible(true);
+  };
+
+  const handleAddCustomizedItem = () => {
+    const customizedItem = {
+      ...selectedItem,
+      preparation,
+      extraIngredients,
+    };
+    setSelectedItems([...selectedItems, customizedItem]);
+    setModalVisible(false);
+    setPreparation("");
+    setExtraIngredients("");
+  };
+
+  const handleRemoveItem = (index) => {
+    const newSelectedItems = selectedItems.filter((_, i) => i !== index);
+    setSelectedItems(newSelectedItems);
   };
 
   const handlePlaceOrder = () => {
@@ -90,9 +114,30 @@ const RealizarPedido = ({ route, navigation }) => {
           {idioma === "es" ? "Items Seleccionados" : "Selected Items"}
         </Text>
         {selectedItems.map((item, index) => (
-          <Text key={index} style={styles.selectedItem}>
-            {item.name} - ${item.price}
-          </Text>
+          <View key={index} style={styles.selectedItemContainer}>
+            <Text style={styles.selectedItem}>
+              {item.name} - ${item.price}
+            </Text>
+            {item.preparation && (
+              <Text style={styles.customizationText}>
+                {idioma === "es" ? "Preparación: " : "Preparation: "}
+                {item.preparation}
+              </Text>
+            )}
+            {item.extraIngredients && (
+              <Text style={styles.customizationText}>
+                {idioma === "es"
+                  ? "Ingredientes extra: "
+                  : "Extra ingredients: "}
+                {item.extraIngredients}
+              </Text>
+            )}
+            <Button
+              title={idioma === "es" ? "Eliminar" : "Remove"}
+              onPress={() => handleRemoveItem(index)}
+              color="red"
+            />
+          </View>
         ))}
         {selectedItems.length > 0 && (
           <Text style={styles.total}>
@@ -108,6 +153,48 @@ const RealizarPedido = ({ route, navigation }) => {
         title={idioma === "es" ? "Realizar Pedido" : "Place Order"}
         onPress={handlePlaceOrder}
       />
+
+      <Modal
+        visible={modalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>
+              {idioma === "es" ? "Personalizar plato" : "Customize dish"}
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder={
+                idioma === "es"
+                  ? "Forma de preparación"
+                  : "Preparation instructions"
+              }
+              value={preparation}
+              onChangeText={setPreparation}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder={
+                idioma === "es" ? "Ingredientes extra" : "Extra ingredients"
+              }
+              value={extraIngredients}
+              onChangeText={setExtraIngredients}
+            />
+            <Button
+              title={idioma === "es" ? "Agregar" : "Add"}
+              onPress={handleAddCustomizedItem}
+            />
+            <Button
+              title={idioma === "es" ? "Cancelar" : "Cancel"}
+              onPress={() => setModalVisible(false)}
+              color="red"
+            />
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -157,9 +244,17 @@ const getStyles = (tema, texto) =>
       marginTop: 20,
       marginBottom: 20,
     },
+    selectedItemContainer: {
+      marginBottom: 12,
+    },
     selectedItem: {
       fontSize: texto === "sm" ? 14 : texto === "md" ? 16 : 18,
       color: tema === "dark" ? "#fff" : "#000",
+      marginBottom: 4,
+    },
+    customizationText: {
+      fontSize: texto === "sm" ? 12 : texto === "md" ? 14 : 16,
+      color: tema === "dark" ? "#ccc" : "#666",
       marginBottom: 4,
     },
     total: {
@@ -167,6 +262,33 @@ const getStyles = (tema, texto) =>
       fontWeight: "bold",
       color: tema === "dark" ? "#fff" : "#000",
       marginTop: 8,
+    },
+    modalContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
+    modalContent: {
+      width: "80%",
+      padding: 20,
+      backgroundColor: tema === "dark" ? "#444" : "#fff",
+      borderRadius: 8,
+    },
+    modalTitle: {
+      fontSize: texto === "sm" ? 18 : texto === "md" ? 20 : 22,
+      fontWeight: "bold",
+      marginBottom: 16,
+      color: tema === "dark" ? "#fff" : "#000",
+    },
+    input: {
+      height: 40,
+      borderColor: tema === "dark" ? "#ccc" : "#666",
+      borderWidth: 1,
+      borderRadius: 4,
+      paddingHorizontal: 8,
+      marginBottom: 12,
+      color: tema === "dark" ? "#fff" : "#000",
     },
   });
 
