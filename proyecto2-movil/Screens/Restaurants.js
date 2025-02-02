@@ -25,7 +25,7 @@ export default function Restaurants({ navigation }) {
       try {
         // Obtener los tipos de cocina desde la tabla TiposCocinas
         const { data: cuisineData, error: cuisineError } = await supabase
-          .from("tiposcocinas") // Nombre de la tabla corregido
+          .from("tiposcocinas")
           .select("*");
 
         if (cuisineError) {
@@ -34,19 +34,12 @@ export default function Restaurants({ navigation }) {
         }
 
         // Guardar los nombres de los tipos de cocina
-        setCuisineTypes(cuisineData.map((cuisine) => cuisine.nombre)); // Asume que el nombre del tipo de cocina está en el campo "nombre"
+        setCuisineTypes(cuisineData.map((cuisine) => cuisine.nombre));
 
-        // Obtener los restaurantes desde la tabla Cocinas con un JOIN a la tabla CocinaYTipo y TiposCocinas
-        const { data: restaurantData, error: restaurantError } =
-          await supabase.from("cocinas").select(`
-              id,
-              nombre,
-              direccion_exacta,
-              estado,
-              tiempo_entrega,
-              metodos_pago,
-              CocinaYTipo ( TiposCocinas ( nombre ) )
-            `);
+        // Obtener los restaurantes desde la tabla Cocinas
+        const { data: restaurantData, error: restaurantError } = await supabase
+          .from("cocinas")
+          .select("*");
 
         if (restaurantError) {
           console.error("Error fetching restaurants:", restaurantError);
@@ -58,7 +51,7 @@ export default function Restaurants({ navigation }) {
           id: restaurant.id,
           name: restaurant.nombre,
           location: restaurant.direccion_exacta,
-          cuisine: restaurant.CocinaYTipo.map((tc) => tc.TiposCocinas.nombre), // Ajustado para usar TiposCocinas
+          cuisine: "Sin tipo", // Por ahora, no hay tipos asociados
           status: restaurant.estado ? "Abierto" : "Cerrado",
           deliveryTime: `${restaurant.tiempo_entrega} min`,
           compatibility: Math.floor(Math.random() * 100), // Esto puede ser reemplazado por un cálculo real
@@ -105,7 +98,7 @@ export default function Restaurants({ navigation }) {
   const renderRestaurantCard = ({ item }) => (
     <TouchableOpacity
       onPress={() =>
-        navigation.navigate("RestaurantDetails", { restaurant: item })
+        navigation.navigate("RestaurantDetails", { restaurantId: item.id })
       }
     >
       <View
@@ -139,7 +132,7 @@ export default function Restaurants({ navigation }) {
             fontSize: texto === "sm" ? 12 : texto === "md" ? 14 : 16,
           }}
         >
-          {item.cuisine.join(", ")}
+          {item.cuisine}
         </Text>
         <View style={styles.statusContainer}>
           <Text

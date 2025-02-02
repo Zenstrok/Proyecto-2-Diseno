@@ -1,16 +1,58 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { AppContext } from "../Context/AppContext";
+import { supabase } from "../services/supabase";
 
 const RestaurantDetails = ({ route, navigation }) => {
   const { idioma, tema, texto } = useContext(AppContext);
-  const { restaurant } = route.params;
+  const { restaurantId } = route.params; // Cambiamos para recibir el ID del restaurante
+  const [restaurant, setRestaurant] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Función para obtener los detalles del restaurante desde Supabase
+  useEffect(() => {
+    const fetchRestaurantDetails = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("cocinas")
+          .select("*")
+          .eq("id", restaurantId)
+          .single();
+
+        if (error) {
+          console.error("Error fetching restaurant details:", error);
+          return;
+        }
+
+        // Mapear los datos para que coincidan con la estructura esperada
+        const formattedRestaurant = {
+          id: data.id,
+          name: data.nombre,
+          description: data.descripcion || "Sin descripción",
+          address: data.direccion_exacta,
+          phone: data.telefono,
+          cuisine: data.tipos_cocina || ["Sin tipo"],
+          deliveryTime: `${data.tiempo_entrega} min`,
+          compatibility: Math.floor(Math.random() * 100), // Esto puede ser reemplazado por un cálculo real
+        };
+
+        setRestaurant(formattedRestaurant);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRestaurantDetails();
+  }, [restaurantId]);
 
   // Función para obtener estilos dinámicos
   const getDynamicStyles = (type) => {
@@ -30,6 +72,26 @@ const RestaurantDetails = ({ route, navigation }) => {
 
     return baseStyles;
   };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
+  if (!restaurant) {
+    return (
+      <View style={styles.container}>
+        <Text style={getDynamicStyles()}>
+          {idioma === "es"
+            ? "Restaurante no encontrado"
+            : "Restaurant not found"}
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView
@@ -132,6 +194,11 @@ const styles = StyleSheet.create({
   buttonText: {
     fontWeight: "bold",
     fontSize: 16,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
