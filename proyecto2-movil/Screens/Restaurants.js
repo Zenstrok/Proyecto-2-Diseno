@@ -16,14 +16,13 @@ export default function Restaurants({ navigation }) {
   const [restaurants, setRestaurants] = useState([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [selectedCuisines, setSelectedCuisines] = useState([]);
-  const [cuisineTypes, setCuisineTypes] = useState([]); // Nuevo estado para los tipos de cocina
+  const [cuisineTypes, setCuisineTypes] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Obtener los restaurantes y los tipos de cocina desde Supabase
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Obtener los tipos de cocina desde la tabla TiposCocinas
+        // Obtener los tipos de cocina
         const { data: cuisineData, error: cuisineError } = await supabase
           .from("tiposcocinas")
           .select("*");
@@ -33,28 +32,29 @@ export default function Restaurants({ navigation }) {
           return;
         }
 
-        // Guardar los nombres de los tipos de cocina
         setCuisineTypes(cuisineData.map((cuisine) => cuisine.nombre));
 
-        // Obtener los restaurantes desde la tabla Cocinas
+        // Obtener los restaurantes con sus tipos de cocina asociados
         const { data: restaurantData, error: restaurantError } = await supabase
           .from("cocinas")
-          .select("*");
+          .select("*, tiposcocinas(nombre)");
 
         if (restaurantError) {
           console.error("Error fetching restaurants:", restaurantError);
           return;
         }
 
-        // Mapear los datos para que coincidan con la estructura esperada
         const formattedRestaurants = restaurantData.map((restaurant) => ({
           id: restaurant.id,
           name: restaurant.nombre,
           location: restaurant.direccion_exacta,
-          cuisine: "Sin tipo", // Por ahora, no hay tipos asociados
+          cuisine:
+            restaurant.tiposcocinas && restaurant.tiposcocinas.length > 0
+              ? restaurant.tiposcocinas.map((c) => c.nombre)
+              : ["Sin tipo"],
           status: restaurant.estado ? "Abierto" : "Cerrado",
           deliveryTime: `${restaurant.tiempo_entrega} min`,
-          compatibility: Math.floor(Math.random() * 100), // Esto puede ser reemplazado por un cálculo real
+          compatibility: Math.floor(Math.random() * 100),
         }));
 
         setRestaurants(formattedRestaurants);
@@ -69,7 +69,7 @@ export default function Restaurants({ navigation }) {
     fetchData();
   }, []);
 
-  // Filtrar restaurantes por tipo de cocina
+  // Función para aplicar filtro de tipos de cocina
   const filterByCuisine = (cuisine) => {
     if (selectedCuisines.includes(cuisine)) {
       setSelectedCuisines(selectedCuisines.filter((c) => c !== cuisine));
@@ -78,6 +78,7 @@ export default function Restaurants({ navigation }) {
     }
   };
 
+  // Aplicar el filtro cuando se cambia la selección de tipos de cocina
   useEffect(() => {
     if (selectedCuisines.length > 0) {
       const filtered = restaurants.filter((restaurant) =>
@@ -132,7 +133,7 @@ export default function Restaurants({ navigation }) {
             fontSize: texto === "sm" ? 12 : texto === "md" ? 14 : 16,
           }}
         >
-          {item.cuisine}
+          {item.cuisine.join(", ")}
         </Text>
         <View style={styles.statusContainer}>
           <Text

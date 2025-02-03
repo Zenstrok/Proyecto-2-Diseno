@@ -7,8 +7,8 @@ import {
   TextInput,
   ScrollView,
   Alert,
-  Picker,
 } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import { AppContext } from "../Context/AppContext";
 import { supabase } from "../services/supabase";
 
