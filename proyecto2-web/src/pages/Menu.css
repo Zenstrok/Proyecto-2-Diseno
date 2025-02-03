@@ -1,439 +1,339 @@
-/* Variables de Color */
+/* menu.css */
 :root {
-    --primary-color: #ff6b6b;
-    --background-light: #ffffff;
-    --background-dark: #2d3436;
-    --text-light: #2d3436;
-    --text-dark: #ffffff;
-  
-    /* Nuevas Variables para Pedidos Completados */
-    --historial-bg-light: #ffffff;
-    --historial-bg-dark: #3d3d3d;
-    --historial-text-light: #2d3436;
-    --historial-text-dark: #ffffff;
-    
-    /* Nuevas Variables para la Barra de Búsqueda */
-    --search-bg-light: #f9f9f9;
-    --search-bg-dark: #555555;
-    --search-border-light: #ccc;
-    --search-border-dark: #777777;
-    --search-text-light: #2d3436;
-    --search-text-dark: #ffffff;
-    --search-placeholder-light: #999999;
-    --search-placeholder-dark: #cccccc;
-    --search-icon-color-light: #666666;
-    --search-icon-color-dark: #cccccc;
-    
-    /* Badge de Estado */
-    --badge-listo-bg: #66BB6A;
-    --badge-listo-text: #ffffff;
-    --error-color: #e74c3c;
-  }
-  
-  /* Modo Oscuro */
-  .inicio.dark-mode {
-    background-color: var(--background-dark);
-    color: var(--text-dark);
-  }
-  
-  .inicio.dark-mode .header {
-    background-color: var(--primary-color);
-    color: white;
-  }
-  
-  .inicio.dark-mode .pedido-card {
-    background: #404040;
-  }
-  
-  .inicio.dark-mode .tiempo {
-    color: #ccc;
-  }
-  
-  .inicio.dark-mode .modificaciones {
-    background: rgba(255,229,100,0.1);
-  }
-  
-  .inicio.dark-mode .historial-section {
-    background-color: var(--historial-bg-dark);
-    color: var(--historial-text-dark);
-  }
-  
-  .inicio.dark-mode .historial-item {
-    background-color: rgba(255, 107, 107, 0.1);
-  }
-  
-  .inicio.dark-mode .historial-item:hover {
-    background-color: rgba(255, 107, 107, 0.15);
-  }
-  
-  .inicio.dark-mode .historial-table {
-    background-color: var(--historial-bg-dark);
-    color: var(--historial-text-dark);
-  }
-  
-  .inicio.dark-mode .historial-table th {
-    background-color: var(--primary-color);
-    color: white;
-  }
-  
-  .inicio.dark-mode .historial-row:nth-child(even) {
-    background-color: rgba(255, 107, 107, 0.1);
-  }
-  
-  .inicio.dark-mode .historial-row:hover {
-    background-color: rgba(255, 107, 107, 0.15);
-  }
-  
-  .inicio.dark-mode .dish-form {
-    background: #3d3d3d;
-    color: var(--text-dark);
-  }
-  
-  .inicio.dark-mode .dish-form input[type="text"],
-  .inicio.dark-mode .dish-form input[type="number"],
-  .inicio.dark-mode .dish-form textarea {
-    background-color: #555555;
-    color: var(--text-dark);
-    border: 1px solid #444444;
-  }
-  
-  .inicio.dark-mode .customizable-section {
-    background: #4a4a4a;
-    color: var(--text-dark);
-  }
-  
-  .inicio.dark-mode .customizable-inputs input {
-    background-color: #555555;
-    color: var(--text-dark);
-    border: 1px solid #444444;
-  }
-  
-  .inicio.dark-mode .customizable-item {
-    background: #666666;
-  }
-  
-  /* Estilos Generales */
-  .inicio {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background-color: var(--background-light);
-    color: var(--text-light);
-    transition: all 0.3s ease;
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: var(--primary-color);
-    color: white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    border-radius: 8px;
-  }
-  
-  .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-  
-  .header-controls {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-  }
-  
-  .notificaciones-btn {
-    background: rgba(255,255,255,0.1);
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    color: white;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  
-  .badge {
-    background: white;
-    color: var(--primary-color);
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-size: 0.8rem;
-  }
-  
-  .theme-toggle {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-    color: white;
-  }
-  
-  .theme-toggle:hover {
-    opacity: 0.8;
-  }
-  
-  .main-content {
-    flex: 1;
-    padding: 2rem;
-    max-width: 1400px;
-    margin: 0 auto;
-    width: 100%;
-  }
-  
-  .section-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--primary-color);
-  }
-  
-  /* Formulario */
-  .dish-form {
-    background: #f5f5f5;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 30px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  .dish-form h2 {
-    margin-top: 0;
-  }
-  
-  .dish-form label {
-    display: block;
-    margin-bottom: 15px;
-  }
-  
-  .dish-form input[type="text"],
-  .dish-form input[type="number"],
-  .dish-form textarea {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #fff;
-    color: #000;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  .dark-mode .dish-form input[type="text"],
-  .dark-mode .dish-form input[type="number"],
-  .dark-mode .dish-form textarea {
-    background-color: #555555;
-    color: var(--text-dark);
-    border: 1px solid #444444;
-  }
-  
-  .customizable-section {
-    margin: 20px 0;
-    padding: 15px;
-    background: #fff;
-    border-radius: 4px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  .dark-mode .customizable-section {
-    background: #4a4a4a;
-    color: var(--text-dark);
-  }
-  
-  .customizable-inputs {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .customizable-inputs input {
-    flex: 1;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #fff;
-    color: #000;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  .dark-mode .customizable-inputs input {
-    background-color: #555555;
-    color: var(--text-dark);
-    border: 1px solid #444444;
-  }
-  
-  .btn-remove {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #ff7675;
-    font-size: 1.2rem;
-  }
-  
-  .btn-remove:hover {
-    color: #e74c3c;
-  }
-  
-  .btn-add {
-    background: var(--secondary-color);
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background 0.3s ease;
-  }
-  
-  .btn-add:hover {
-    background: #43a047;
-  }
-  
-  .customizable-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  
-  .customizable-item {
-    background: #e0e0e0;
-    padding: 5px 10px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  
-  .dark-mode .customizable-item {
-    background: #666666;
-  }
-  
+  --primary-color: #ff6b6b;
+  --background-light: #ffffff;
+  --background-dark: #2d3436;
+  --text-light: #2d3436;
+  --text-dark: #ffffff;
+  --historial-bg-light: #ffffff;
+  --historial-bg-dark: #3d3d3d;
+  --search-border-light: #ccc;
+  --search-border-dark: #777;
+  --error-color: #e74c3c;
+  --success-color: #66BB6A;
+  --warning-color: #ff9800;
+  --border-radius: 10px;
+  --card-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  --transition: all 0.3s ease;
+}
+
+/* Estructura Base */
+.menu {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background-light);
+  color: var(--text-light);
+  transition: var(--transition);
+}
+
+.menu.dark-mode {
+  background-color: var(--background-dark);
+  color: var(--text-dark);
+}
+
+/* Header - Igual que Inicio */
+.menu .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: var(--primary-color);
+  color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.menu .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Controles de Tema */
+.theme-toggle {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: white;
+  transition: opacity 0.3s;
+}
+
+.theme-toggle:hover {
+  opacity: 0.8;
+}
+
+/* Contenido Principal */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Títulos y Secciones */
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.sub-section-title {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+}
+
+/* Formulario */
+.dish-form {
+  background: var(--historial-bg-light);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  margin-bottom: 2rem;
+  transition: var(--transition);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.dish-form label {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.dish-form input,
+.dish-form textarea {
+  width: 30%;
+  padding: 0.8rem;
+  border: 1px solid var(--search-border-light);
+  border-radius: 5px;
+  background: var(--background-light);
+  color: var(--text-light);
+  transition: var(--transition);
+}
+
+/* Ingredientes Personalizables */
+.customizable-section {
+  background: var(--historial-bg-light);
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  margin: 1.5rem 0;
+  transition: var(--transition);
+}
+
+.customizable-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.customizable-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.customizable-item {
+  background: var(--primary-color);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--transition);
+}
+
+.btn-remove {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0;
+  font-size: 1.1rem;
+}
+
+/* Grid de Platos */
+.dishes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.dish-card {
+  background: var(--background-light);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.2s;
+}
+
+.dish-card:hover {
+  transform: translateY(-3px);
+}
+
+.dish-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+  margin-bottom: 1rem;
+}
+
+.dish-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.dish-details {
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+/* Botones */
+.btn-primary {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-danger {
+  background: var(--error-color);
+}
+
+.btn-warning {
+  background: var(--warning-color);
+}
+
+.btn-success {
+  background: var(--success-color);
+}
+
+.dish-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+/* 🔹 Ajustar la alineación del checkbox "Disponible" */
+.availability {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Espaciado entre el checkbox y el texto */
+  margin: 1rem 0;
+  font-weight: bold;
+}
+
+.availability input {
+  width: auto;
+  height: auto;
+  cursor: pointer; /* Mejora la accesibilidad */
+}
+
+/* 🔹 Ajuste en modo oscuro */
+.menu.dark-mode .availability {
+  color: var(--text-dark);
+}
+
+/* 🔹 Ajustar para pantallas pequeñas */
+@media (max-width: 768px) {
   .availability {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 15px 0;
+    flex-direction: row;
+    justify-content: flex-start;
   }
-  
+}
+
+
+/* Modo Oscuro */
+.menu.dark-mode .dish-form,
+.menu.dark-mode .customizable-section {
+  background: var(--historial-bg-dark);
+}
+
+.menu.dark-mode .dish-form input,
+.menu.dark-mode .dish-form textarea {
+  background: var(--background-dark);
+  border-color: var(--search-border-dark);
+  color: var(--text-dark);
+}
+
+.menu.dark-mode .customizable-item {
+  background: #ff7675;
+}
+
+.menu.dark-mode .dish-card {
+  background: var(--historial-bg-dark);
+}
+
+.menu.dark-mode .dish-details {
+  color: var(--text-dark);
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .customizable-inputs {
+    grid-template-columns: 1fr;
+  }
+
   .dishes-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: 1fr;
   }
-  
-  .dish-card {
-    background: white;
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  .dark-mode .dish-card {
-    background: #3d3d3d;
-    color: var(--text-dark);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-  }
-  
-  .dish-card.unavailable {
-    opacity: 0.6;
-    background: #f8d7da;
-  }
-  
-  .dish-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 4px;
-    margin-bottom: 10px;
-  }
-  
-  .dish-details {
-    font-size: 0.9em;
-  }
-  
-  .customizables {
-    margin-top: 10px;
-    font-size: 0.85em;
-  }
-  
+
   .dish-actions {
-    margin-top: 15px;
-    display: flex;
-    gap: 10px;
+    flex-direction: column;
   }
-  
-  .dish-actions button {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    background-color: var(--primary-color);
-    color: white;
-    transition: background-color 0.3s ease;
-  }
-  
-  .dish-actions button:hover {
-    background-color: #e74c3c;
-  }
-  
-  .dish-actions button:nth-child(2) {
-    background-color: #6c757d;
-  }
-  
-  .dish-actions button:nth-child(2):hover {
-    background-color: #5a6268;
-  }
-  
-  .dish-actions button:nth-child(3) {
-    background-color: #ff9800;
-  }
-  
-  .dish-actions button:nth-child(3):hover {
-    background-color: #e68900;
-  }
-  
-  .error-message {
-    color: var(--error-color);
-    margin-bottom: 1rem;
-    font-weight: bold;
-  }
-  
-  /* Responsividad */
-  @media (max-width: 768px) {
-    .dishes-grid {
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    }
-  
-    .dish-card img {
-      height: 150px;
-    }
-  
-    .customizable-inputs {
-      flex-direction: column;
-    }
-  
-    .customizable-item {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .dish-details {
-      font-size: 0.85em;
-    }
-  
-    .customizables {
-      font-size: 0.8em;
-    }
-  
-    .dish-actions {
-      flex-direction: column;
-      gap: 5px;
-    }
-  }
-  
+}
+
+/* Mensajes de Error */
+.error-message {
+  color: var(--error-color);
+  padding: 1rem;
+  background: rgba(231, 76, 60, 0.1);
+  border-radius: var(--border-radius);
+  margin-bottom: 1rem;
+  border: 1px solid var(--error-color);
+}
+
+/* Estado No Disponible */
+.unavailable {
+  opacity: 0.6;
+  position: relative;
+}
+
+.unavailable::after {
+  content: "NO DISPONIBLE";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--error-color);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: bold;
+}

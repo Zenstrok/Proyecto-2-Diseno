@@ -1,183 +1,135 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './menu.css';
+import { AppContext } from '/src/context/AppContext.jsx';
+import { supabase } from "/src/services/supabase";
 
 const Menu = () => {
-  const [darkMode, setDarkMode] = useState(false); // Estado para modo oscuro
+  const { darkMode, idioma, cocina } = useContext(AppContext); // Obtener idioma y cocina desde el contexto
   const [dishes, setDishes] = useState([]);
   const [formData, setFormData] = useState({
     id: null,
     name: '',
     description: '',
     price: '',
-    baseIngredients: '',
     photo: '',
-    customizableIngredients: [],
     isAvailable: true
   });
-  const [newCustomizable, setNewCustomizable] = useState({
-    name: '',
-    additionalCost: ''
-  });
-  const [error, setError] = useState(null); // Estado para manejar errores
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
+  // 📌 Cargar platos de la cocina logueada al iniciar la página
+  useEffect(() => {
+    const fetchDishes = async () => {
+      if (!cocina) return; // Si no hay una cocina logueada, no hacer nada
+
+      try {
+        const { data, error } = await supabase
+          .from('platosbase')
+          .select('*')
+          .eq('idcocina', cocina.id); // Filtrar platos según la cocina logueada
+
+        if (error) throw error;
+        setDishes(data);
+      } catch (err) {
+        console.error("Error al obtener los platos:", err);
+      }
+    };
+
+    fetchDishes();
+  }, [cocina]); // Ejecutar cuando la cocina cambie
+
+  // 📌 Manejar cambios en los inputs
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleCustomizableChange = (e) => {
-    const { name, value } = e.target;
-    setNewCustomizable(prev => ({ ...prev, [name]: value }));
-  };
-
-  const addCustomizable = () => {
-    if (newCustomizable.name && newCustomizable.additionalCost) {
-      setFormData(prev => ({
-        ...prev,
-        customizableIngredients: [...prev.customizableIngredients, newCustomizable]
-      }));
-      setNewCustomizable({ name: '', additionalCost: '' });
-      setError(null); // Resetear errores después de agregar
-    } else {
-      setError("Por favor, completa ambos campos para agregar un ingrediente personalizable.");
-    }
-  };
-
-  const removeCustomizable = (index) => {
-    setFormData(prev => ({
-      ...prev,
-      customizableIngredients: prev.customizableIngredients.filter((_, i) => i !== index)
-    }));
-  };
-
-  const handleSubmit = (e) => {
+  // 📌 Enviar datos a Supabase
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Validación básica
-    if (!formData.name || !formData.price) {
-      setError("Por favor, completa todos los campos requeridos.");
+
+    if (!cocina) {
+      setError(idioma === "en" ? "No kitchen selected. Please log in again." : "No hay cocina seleccionada. Por favor, inicie sesión nuevamente.");
       return;
     }
 
-    const dish = {
-      ...formData,
-      id: formData.id || Date.now(),
-      price: parseFloat(formData.price),
-      baseIngredients: formData.baseIngredients.split(',').map(i => i.trim())
-    };
+    if (!formData.name || !formData.price) {
+      setError(idioma === "en" ? "Please fill in all required fields." : "Por favor, completa todos los campos requeridos.");
+      return;
+    }
 
-    setDishes(prev => 
-      formData.id 
-        ? prev.map(d => d.id === formData.id ? dish : d) 
-        : [...prev, dish]
-    );
-    
-    setFormData({
-      id: null,
-      name: '',
-      description: '',
-      price: '',
-      baseIngredients: '',
-      photo: '',
-      customizableIngredients: [],
-      isAvailable: true
-    });
-    setError(null); // Resetear errores después de una operación exitosa
-  };
+    try {
+      const { data, error } = await supabase.from("platosbase").insert([
+        {
+          nombre: formData.name,
+          descripcion: formData.description,
+          preciobase: parseFloat(formData.price),
+          foto: formData.photo,
+          idcocina: cocina.id, // Guardar el plato en la cocina actual
+          disponible: formData.isAvailable,
+        },
+      ]).select(); // 👈 Recupera el plato insertado inmediatamente
 
-  const editDish = (dish) => {
-    setFormData({
-      ...dish,
-      baseIngredients: dish.baseIngredients.join(', ')
-    });
-    setError(null); // Resetear errores al editar
-  };
+      if (error) throw error;
 
-  const deleteDish = (id) => {
-    if (window.confirm("¿Estás seguro de eliminar este plato?")) {
-      setDishes(prev => prev.filter(d => d.id !== id));
-      setError(null); // Resetear errores después de eliminar
+      console.log("Plato guardado en Supabase:", data);
+
+      // Actualizar la lista de platos sin recargar la página
+      setDishes((prev) => [...prev, ...data]);
+
+      // Resetear formulario después de guardar
+      setFormData({
+        id: null,
+        name: '',
+        description: '',
+        price: '',
+        photo: '',
+        isAvailable: true
+      });
+
+      setError(null);
+      setSuccess(idioma === "en" ? "Dish added successfully!" : "Plato agregado con éxito!");
+      setTimeout(() => setSuccess(null), 3000); // Quitar mensaje de éxito después de 3 segundos
+
+    } catch (err) {
+      setError((idioma === "en" ? "Error saving to Supabase: " : "Error al guardar en Supabase: ") + err.message);
+      console.error("Error al guardar en Supabase:", err);
     }
   };
 
-  const toggleAvailability = (id) => {
-    setDishes(prev => prev.map(d => 
-      d.id === id ? { ...d, isAvailable: !d.isAvailable } : d
-    ));
-  };
-
   return (
-    <div className={`inicio ${darkMode ? 'dark-mode' : ''}`}>
+    <div className={`menu ${darkMode ? 'dark-mode' : ''}`}>
       <header className="header">
         <div className="logo">
-          🍽️ Gestión de Menú
-        </div>
-        <div className="header-controls">
-          <button className="theme-toggle" onClick={() => setDarkMode(!darkMode)}>
-            {darkMode ? '☀️ Claro' : '🌙 Oscuro'}
-          </button>
+          🍽️ {idioma === "en" ? "Menu Management" : "Gestión de Menú"}
         </div>
       </header>
-      
+
       <main className="main-content">
         <form onSubmit={handleSubmit} className="dish-form">
-          <h2>{formData.id ? 'Editar Plato' : 'Agregar Nuevo Plato'}</h2>
+          <h2>{idioma === "en" ? "Add New Dish" : "Agregar Nuevo Plato"}</h2>
           {error && <p className="error-message">{error}</p>}
-          
-          <label>
-            Nombre:
-            <input type="text" name="name" value={formData.name} onChange={handleInputChange} required />
-          </label>
-          
-          <label>
-            Descripción:
-            <textarea name="description" value={formData.description} onChange={handleInputChange} required />
-          </label>
-          
-          <label>
-            Precio:
-            <input type="number" name="price" value={formData.price} onChange={handleInputChange} step="0.01" required />
-          </label>
-          
-          <label>
-            Ingredientes Base (separados por comas):
-            <input type="text" name="baseIngredients" value={formData.baseIngredients} onChange={handleInputChange} required />
-          </label>
-          
-          <label>
-            URL de la Foto:
-            <input type="text" name="photo" value={formData.photo} onChange={handleInputChange} placeholder="http://ejemplo.com/foto.jpg" />
-          </label>
-          
-          <div className="customizable-section">
-            <h3>Ingredientes Personalizables</h3>
-            <div className="customizable-inputs">
-              <input
-                type="text"
-                name="name"
-                placeholder="Nombre ingrediente"
-                value={newCustomizable.name}
-                onChange={handleCustomizableChange}
-              />
-              <input
-                type="number"
-                name="additionalCost"
-                placeholder="Costo adicional"
-                value={newCustomizable.additionalCost}
-                onChange={handleCustomizableChange}
-                step="0.01"
-              />
-              <button type="button" onClick={addCustomizable} className="btn-add">Agregar</button>
-            </div>
-            
-            <div className="customizable-list">
-              {formData.customizableIngredients.map((ingredient, index) => (
-                <div key={index} className="customizable-item">
-                  <span>{ingredient.name} (+${ingredient.additionalCost})</span>
-                  <button type="button" onClick={() => removeCustomizable(index)} className="btn-remove">×</button>
-                </div>
-              ))}
-            </div>
-          </div>
+          {success && <p className="success-message">{success}</p>}
+
+          <label>{idioma === "en" ? "Name:" : "Nombre:"}</label>
+          <input type="text" name="name" value={formData.name} onChange={handleInputChange} required />
+
+          <label>{idioma === "en" ? "Description:" : "Descripción:"}</label>
+          <textarea name="description" value={formData.description} onChange={handleInputChange} />
+
+          <label>{idioma === "en" ? "Price (₡):" : "Precio (₡):"}</label>
+          <input 
+            type="number" 
+            name="price" 
+            value={formData.price} 
+            onChange={handleInputChange} 
+            step="0.01" 
+            required 
+            placeholder={idioma === "en" ? "Enter price in CRC" : "Ingrese precio en CRC"} 
+          />
+
+          <label>{idioma === "en" ? "Photo URL:" : "URL de la Foto:"}</label>
+          <input type="text" name="photo" value={formData.photo} onChange={handleInputChange} placeholder="http://example.com/photo.jpg" />
 
           <label className="availability">
             <input
@@ -185,50 +137,36 @@ const Menu = () => {
               checked={formData.isAvailable}
               onChange={() => setFormData(prev => ({ ...prev, isAvailable: !prev.isAvailable }))}
             />
-            Disponible
+            {idioma === "en" ? "Available" : "Disponible"}
           </label>
 
-          <button type="submit" className="btn-submit">{formData.id ? 'Actualizar' : 'Agregar'} Plato</button>
+          <button type="submit" className="btn-submit">
+            {idioma === "en" ? "Add Dish" : "Agregar Plato"}
+          </button>
         </form>
 
         <section className="section-title">
-          <h2>Lista de Platos</h2>
-          {/* Puedes añadir filtros o botones adicionales aquí */}
+          <h2>{idioma === "en" ? "Dish List" : "Lista de Platos"}</h2>
         </section>
 
         <div className="dishes-grid">
-          {dishes.map(dish => (
-            <div key={dish.id} className={`dish-card ${!dish.isAvailable ? 'unavailable' : ''}`}>
-              {dish.photo && <img src={dish.photo} alt={dish.name} />}
-              <h3>{dish.name}</h3>
-              <p>{dish.description}</p>
-              <div className="dish-details">
-                <p>Precio: ${dish.price.toFixed(2)}</p>
-                <p>Ingredientes Base: {dish.baseIngredients.join(', ')}</p>
-                {dish.customizableIngredients.length > 0 && (
-                  <div className="customizables">
-                    <p>Personalizaciones:</p>
-                    <ul>
-                      {dish.customizableIngredients.map((ing, i) => (
-                        <li key={i}>{ing.name} (+${ing.additionalCost})</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                <div className="dish-actions">
-                  <button onClick={() => editDish(dish)}>Editar</button>
-                  <button onClick={() => deleteDish(dish.id)}>Eliminar</button>
-                  <button onClick={() => toggleAvailability(dish.id)}>
-                    {dish.isAvailable ? 'Desactivar' : 'Activar'}
-                  </button>
-                </div>
+          {dishes.length === 0 ? (
+            <p>{idioma === "en" ? "No dishes found for this kitchen." : "No se encontraron platos para esta cocina."}</p>
+          ) : (
+            dishes.map((dish) => (
+              <div key={dish.id} className={`dish-card ${!dish.disponible ? 'unavailable' : ''}`}>
+                {dish.foto && <img src={dish.foto} alt={dish.nombre} />}
+                <h3>{dish.nombre}</h3>
+                <p>{dish.descripcion}</p>
+                <p>
+                  {idioma === "en" ? "Price:" : "Precio:"} 
+                  <strong> {dish.preciobase.toLocaleString("es-CR", { style: "currency", currency: "CRC" })} </strong>
+                </p>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </main>
-
-      
     </div>
   );
 };
