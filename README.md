@@ -141,13 +141,13 @@ Ambas aplicaciones utilizan **Supabase** como backend (base de datos, autenticac
 ### Estructura del Proyecto
 ```
 proyecto2/
-├── mobile/          # App React Native (Expo)
+├── proyecto2-movil/          # App React Native (Expo)
 │   ├── Screens/
 │   ├── Context/
 │   ├── services/
 │   ├── App.js
 │   └── ...
-└── web/             # App web React (Vite)
+└── proyecto2-web/             # App web React (Vite)
     ├── src/
     │   ├── pages/
     │   ├── context/
