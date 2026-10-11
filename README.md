@@ -1,4 +1,10 @@
-# Proyecto 2 - Sistema de Pedidos de Comida
+# Food Ordering System — React Native, React & Supabase
+
+Team project for the Software Design course at Instituto Tecnológico de Costa Rica (2024). A customer **mobile app** (React Native + Expo) and a restaurant **web app** (React + Vite) share a **Supabase** backend with PostgreSQL, authentication and real-time order updates.
+
+**Team:** Jose Mario Jiménez Vargas ([@Zenstrok](https://github.com/Zenstrok)), [@JuankGO](https://github.com/JuankGO), [@ValladaresBlanco](https://github.com/ValladaresBlanco)
+
+---
 
 ## English
 
